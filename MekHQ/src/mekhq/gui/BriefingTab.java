@@ -485,8 +485,9 @@ public final class BriefingTab extends CampaignGuiTab {
 
             if (remainingSupportPoints > 0) {
                 SupplyDrops supplyDrops = new SupplyDrops(getCampaign(),
-                    ((AtBContract) mission).getEmployerFaction(), false);
-                supplyDrops.getSupplyDrops(remainingSupportPoints, true);
+                    ((AtBContract) mission).getEmployerFaction(), ((AtBContract) mission).getEnemy(),
+                    false);
+                supplyDrops.getSupplyDropParts(remainingSupportPoints, true);
             }
         }
 
@@ -504,7 +505,7 @@ public final class BriefingTab extends CampaignGuiTab {
                     Objects.equals(String.valueOf(cmd.getStatus()), "Success"));
         }
 
-        // prompt enemy prisoner ransom & freeing
+        // prompt enemy prisoner ransom and freeing
         // this should always be placed after autoAwards, so that prisoners are not
         // factored into autoAwards
         if (getCampaign().getCampaignOptions().isUseAtBPrisonerRansom()) {

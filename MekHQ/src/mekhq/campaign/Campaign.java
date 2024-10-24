@@ -3788,9 +3788,10 @@ public class Campaign implements ITechManager {
                 addReport(report);
 
                 // Supply Drops
-                SupplyDrops supplyDrops = new SupplyDrops(this, contract.getEmployerFaction(), false);
+                SupplyDrops supplyDrops = new SupplyDrops(this, contract.getEmployerFaction(),
+                    contract.getEnemy(), false);
                 int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
-                supplyDrops.getSupplyDrops(dropCount, contract.getMoraleLevel(), false);
+                supplyDrops.getSupplyDropParts(dropCount, contract.getMoraleLevel(), false);
             }
         }
 
@@ -4327,6 +4328,12 @@ public class Campaign implements ITechManager {
                 addReport(entry);
             }
         }
+
+        // Supply Drops
+        // TODO REMOVE THIS BEFORE MERGING!!!
+//        SupplyDrops supplyDrops = new SupplyDrops(this, faction,
+//            faction, true);
+//        supplyDrops.getSupplyDropUnits();
 
         // This must be the last step before returning true
         MekHQ.triggerEvent(new NewDayEvent(this));
@@ -6891,7 +6898,7 @@ public class Campaign implements ITechManager {
     /**
      * borrowed from megamek.client
      */
-    private synchronized void checkDuplicateNamesDuringAdd(Entity entity) {
+    public synchronized void checkDuplicateNamesDuringAdd(Entity entity) {
         unitNameTracker.add(entity);
     }
 
