@@ -486,8 +486,9 @@ public final class BriefingTab extends CampaignGuiTab {
 
             if (remainingSupportPoints > 0) {
                 SupplyDrops supplyDrops = new SupplyDrops(getCampaign(),
-                    ((AtBContract) mission).getEmployerFaction(), false);
-                supplyDrops.getSupplyDrops(remainingSupportPoints, true);
+                    ((AtBContract) mission).getEmployerFaction(), ((AtBContract) mission).getEnemy(),
+                    false);
+                supplyDrops.getSupplyDropParts(remainingSupportPoints, true);
             }
         }
 
