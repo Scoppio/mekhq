@@ -41,6 +41,7 @@ import mekhq.campaign.finances.Money;
 import mekhq.campaign.force.Force;
 import mekhq.campaign.market.enums.UnitMarketType;
 import mekhq.campaign.mission.atb.AtBScenarioFactory;
+import mekhq.campaign.mission.atb.SupplyDrops;
 import mekhq.campaign.mission.enums.AtBContractType;
 import mekhq.campaign.mission.enums.AtBMoraleLevel;
 import mekhq.campaign.mission.resupplyAndCaches.Resupply;
@@ -667,7 +668,7 @@ public class AtBContract extends Contract {
      * </ul>
      *
      * @param campaign the campaign to modify based on the bonus roll.
-     * @return {@code true} if the bonus roll result is a Resupply, otherwise {@code false}.
+     * @return {@code true} if the bonus roll result is a Supply Drop, otherwise {@code false}.
      * @throws IllegalStateException if the bonus roll result is not between 1 and 6 (inclusive).
      */
     public boolean doBonusRoll(Campaign campaign) {
@@ -692,7 +693,7 @@ public class AtBContract extends Contract {
                 campaign.addReport("Bonus: Ronin");
                 recruitRonin(campaign);
             }
-            case 3 -> { // Resupply
+            case 3 -> { // Supply Drop
                 return true;
             }
             case 4 -> {
@@ -795,10 +796,9 @@ public class AtBContract extends Contract {
                 case EVT_BONUSROLL:
                     campaign.addReport("<b>Special Event:</b> ");
                     if (doBonusRoll(campaign)) {
-                        logger.info("AtBContract.java 1");
                         campaign.addReport("Bonus: Captured Supplies");
-                        Resupply supplyDrops = new Resupply(campaign, this, false, false);
-                        supplyDrops.getResupplyParts(1, true);
+                        SupplyDrops supplyDrops = new SupplyDrops(campaign, parentContract.getEmployerFaction(), false);
+                        supplyDrops.getSupplyDrops(1, true);
                     }
 
                     break;

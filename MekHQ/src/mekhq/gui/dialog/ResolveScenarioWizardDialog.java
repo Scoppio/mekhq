@@ -1787,12 +1787,98 @@ public class ResolveScenarioWizardDialog extends JDialog {
     }
 
 
+<<<<<<< HEAD
     /**
      * Shows the info for the given unit in a dialog.
      * @param id - UUID of the unit to show
      * @param isSalvage - is this from the salvage page?
      */
     private void showUnit(UUID id, boolean isSalvage) {
+=======
+        // do a "dry run" of the scenario objectives to output a report
+        StringBuilder sb = new StringBuilder();
+
+        if (tracker.getScenario().hasObjectives()) {
+            for (ScenarioObjective objective : tracker.getScenario().getScenarioObjectives()) {
+                int qualifyingUnitCount = 0;
+
+                if (objectiveCheckboxes.containsKey(objective)) {
+                    for (JCheckBox box : objectiveCheckboxes.get(objective)) {
+                        if (box.isSelected()) {
+                            qualifyingUnitCount++;
+                        }
+                    }
+                }
+
+                Boolean override = null;
+                if (objectiveOverrideCheckboxes.containsKey(objective)) {
+                    override = objectiveOverrideCheckboxes.get(objective).isSelected();
+                }
+
+                sb.append(objectiveProcessor.processObjective(campaign, objective, qualifyingUnitCount, override, tracker, true));
+                sb.append('\n');
+            }
+
+            txtReport.setText(sb.toString());
+        }
+
+        //pilots first
+        StringBuilder missingNames = new StringBuilder();
+        StringBuilder kiaNames = new StringBuilder();
+        StringBuilder recoverNames = new StringBuilder();
+        for (int i = 0; i < pstatuses.size(); i++) {
+            PersonStatus status = pstatuses.get(i);
+            if (hitSliders.get(i).getValue() >= 6 || kiaBtns.get(i).isSelected()) {
+                kiaNames.append(status.getName()).append('\n');
+            } else if (miaBtns.get(i).isSelected()) {
+                missingNames.append(status.getName()).append('\n');
+            } else {
+                recoverNames.append(status.getName()).append('\n');
+            }
+        }
+        txtRecoveredPilots.setText(recoverNames.toString());
+        txtMissingPilots.setText(missingNames.toString());
+        txtDeadPilots.setText(kiaNames.toString());
+
+        //now units
+        StringBuilder recoverUnits = new StringBuilder();
+        StringBuilder missUnits = new StringBuilder();
+        for (int i = 0; i < chksTotaled.size(); i++) {
+            String name = ustatuses.get(i).getName();
+            if (chksTotaled.get(i).isSelected()) {
+                missUnits.append(name).append('\n');
+            } else {
+                recoverUnits.append(name).append('\n');
+            }
+        }
+        txtRecoveredUnits.setText(recoverUnits.toString());
+        txtMissingUnits.setText(missUnits.toString());
+
+        //now salvage
+        StringBuilder salvageUnits = new StringBuilder();
+        for (int i = 0; i < salvageBoxes.size(); i++) {
+            JCheckBox box = salvageBoxes.get(i);
+            if (box.isSelected()) {
+                salvageUnits.append(salvageables.get(i).getName()).append('\n');
+            }
+        }
+        txtSalvage.setText(salvageUnits.toString());
+
+        //now rewards
+        StringBuilder claimed = new StringBuilder();
+        for (int i = 0; i < lootBoxes.size(); i++) {
+            JCheckBox box = lootBoxes.get(i);
+            if (box.isSelected()) {
+                claimed.append(loots.get(i).getShortDescription()).append('\n');
+            }
+        }
+        txtRewards.setText(claimed.toString());
+    }
+
+    private void showUnit(UUID id, boolean salvage) {
+        // TODO : I am not sure I like the pop up dialog, might just make this a view on this
+        // TODO : dialog
+>>>>>>> 8ee73cd508 (Remove bonus parts feature)
         UnitStatus ustatus;
         if (isSalvage) {
             ustatus = tracker.getSalvageStatus().get(id);

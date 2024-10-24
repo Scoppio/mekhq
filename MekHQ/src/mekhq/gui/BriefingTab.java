@@ -479,21 +479,6 @@ public final class BriefingTab extends CampaignGuiTab {
             }
         }
 
-        // exchange remaining support points to Resupplys
-        if (getCampaign().getCampaignOptions().isUseStratCon() && (mission instanceof AtBContract)) {
-            int remainingSupportPoints = ((AtBContract) mission).getStratconCampaignState().getSupportPoints();
-
-            if (remainingSupportPoints > 0) {
-                logger.info("BriefingTab.java");
-                Resupply supplyDrops = new Resupply(getCampaign(), ((AtBContract) mission), false, false);
-                supplyDrops.getResupplyParts(remainingSupportPoints, true);
-            }
-        }
-
-        if (getCampaign().getCampaignOptions().isUseAtB() && (mission instanceof AtBContract)) {
-            getCampaign().getContractMarket().checkForFollowup(getCampaign(), (AtBContract) mission);
-        }
-
         // prompt autoAwards ceremony
         if (getCampaign().getCampaignOptions().isEnableAutoAwards()) {
             AutoAwardsController autoAwardsController = new AutoAwardsController();
