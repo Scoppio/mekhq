@@ -277,7 +277,10 @@ public class Campaign implements ITechManager {
     private final Quartermaster quartermaster;
     private StoryArc storyArc;
     private FameAndInfamyController fameAndInfamy;
+<<<<<<< HEAD
     private BehaviorSettings autoResolveBehaviorSettings;
+=======
+>>>>>>> 6897fb3b42 (Add ComStar interest-based suspicious death mechanic)
     private int comStarInterest;
 
     private final transient ResourceBundle resources = ResourceBundle.getBundle("mekhq.resources.Campaign",
@@ -346,7 +349,10 @@ public class Campaign implements ITechManager {
         quartermaster = new Quartermaster(this);
         fieldKitchenWithinCapacity = false;
         fameAndInfamy = new FameAndInfamyController();
+<<<<<<< HEAD
         autoResolveBehaviorSettings = BehaviorSettingsFactory.getInstance().DEFAULT_BEHAVIOR;
+=======
+>>>>>>> 6897fb3b42 (Add ComStar interest-based suspicious death mechanic)
         comStarInterest = 0;
     }
 
@@ -1592,6 +1598,14 @@ public class Campaign implements ITechManager {
 
     public void setFieldKitchenWithinCapacity(final Boolean fieldKitchenWithinCapacity) {
         this.fieldKitchenWithinCapacity = fieldKitchenWithinCapacity;
+    }
+
+    public int getComStarInterest() {
+        return comStarInterest;
+    }
+
+    public void setComStarInterest(final int comStarInterest) {
+        this.comStarInterest = comStarInterest;
     }
     // endregion Person Creation
 
@@ -3833,6 +3847,7 @@ public class Campaign implements ITechManager {
                     contract.getEnemy(), false);
                 int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
                 supplyDrops.getSupplyDropParts(dropCount, contract.getMoraleLevel(), false);
+                supplyDrops.getLosTechCache(contract);
             }
         }
 
@@ -4448,7 +4463,7 @@ public class Campaign implements ITechManager {
         // TODO REMOVE THIS BEFORE MERGING!!!
 //        SupplyDrops supplyDrops = new SupplyDrops(this, faction,
 //            faction, true);
-//        supplyDrops.getSupplyDropUnits();
+//        supplyDrops.getLosTechCache();
 
         // This must be the last step before returning true
         MekHQ.triggerEvent(new NewDayEvent(this));
@@ -5591,6 +5606,9 @@ public class Campaign implements ITechManager {
         if (fameAndInfamy != null) {
             fameAndInfamy.writeToXml(pw, indent);
         }
+
+        // LosTech
+        MHQXMLUtility.writeSimpleXMLTag(pw, indent, "comStarInterest", comStarInterest);
 
         // Markets
         getPersonnelMarket().writeToXML(pw, indent, this);
