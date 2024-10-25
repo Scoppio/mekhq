@@ -68,7 +68,7 @@ import mekhq.campaign.market.unitMarket.AbstractUnitMarket;
 import mekhq.campaign.market.unitMarket.DisabledUnitMarket;
 import mekhq.campaign.mission.*;
 import mekhq.campaign.mission.atb.AtBScenarioFactory;
-import mekhq.campaign.mission.atb.SupplyDrops;
+import mekhq.campaign.mission.atb.supplyDrops.SupplyDrops;
 import mekhq.campaign.mission.enums.AtBLanceRole;
 import mekhq.campaign.mission.enums.AtBMoraleLevel;
 import mekhq.campaign.mission.enums.MissionStatus;
@@ -340,11 +340,8 @@ public class Campaign implements ITechManager {
         quartermaster = new Quartermaster(this);
         fieldKitchenWithinCapacity = false;
         fameAndInfamy = new FameAndInfamyController();
-<<<<<<< HEAD
         autoResolveBehaviorSettings = BehaviorSettingsFactory.getInstance().DEFAULT_BEHAVIOR;
-=======
         comStarInterest = 0;
->>>>>>> 1f4f57ae43 (Add ComStar interest-based suspicious death mechanic)
     }
 
     /**
@@ -1589,14 +1586,6 @@ public class Campaign implements ITechManager {
 
     public void setFieldKitchenWithinCapacity(final Boolean fieldKitchenWithinCapacity) {
         this.fieldKitchenWithinCapacity = fieldKitchenWithinCapacity;
-    }
-
-    public int getComStarInterest() {
-        return comStarInterest;
-    }
-
-    public void setComStarInterest(final int comStarInterest) {
-        this.comStarInterest = comStarInterest;
     }
     // endregion Person Creation
 
@@ -5491,9 +5480,6 @@ public class Campaign implements ITechManager {
             fameAndInfamy.writeToXml(pw, indent);
         }
 
-        // LosTech
-        MHQXMLUtility.writeSimpleXMLTag(pw, indent, "comStarInterest", comStarInterest);
-
         // Markets
         getPersonnelMarket().writeToXML(pw, indent, this);
 
@@ -6915,7 +6901,7 @@ public class Campaign implements ITechManager {
     /**
      * borrowed from megamek.client
      */
-    public synchronized void checkDuplicateNamesDuringAdd(Entity entity) {
+    private synchronized void checkDuplicateNamesDuringAdd(Entity entity) {
         unitNameTracker.add(entity);
     }
 
