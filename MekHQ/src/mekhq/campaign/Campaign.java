@@ -21,8 +21,6 @@
  */
 package mekhq.campaign;
 
-import megamek.client.bot.princess.BehaviorSettings;
-import megamek.client.bot.princess.BehaviorSettingsFactory;
 import megamek.client.generator.RandomGenderGenerator;
 import megamek.client.generator.RandomNameGenerator;
 import megamek.client.generator.RandomUnitGenerator;
@@ -68,7 +66,6 @@ import mekhq.campaign.market.unitMarket.AbstractUnitMarket;
 import mekhq.campaign.market.unitMarket.DisabledUnitMarket;
 import mekhq.campaign.mission.*;
 import mekhq.campaign.mission.atb.AtBScenarioFactory;
-import mekhq.campaign.mission.atb.supplyDrops.SupplyDrop;
 import mekhq.campaign.mission.enums.AtBLanceRole;
 import mekhq.campaign.mission.enums.AtBMoraleLevel;
 import mekhq.campaign.mission.enums.MissionStatus;
@@ -277,8 +274,7 @@ public class Campaign implements ITechManager {
     private final Quartermaster quartermaster;
     private StoryArc storyArc;
     private FameAndInfamyController fameAndInfamy;
-    private BehaviorSettings autoResolveBehaviorSettings;
-    
+
     private final transient ResourceBundle resources = ResourceBundle.getBundle("mekhq.resources.Campaign",
             MekHQ.getMHQOptions().getLocale());
 
@@ -345,7 +341,6 @@ public class Campaign implements ITechManager {
         quartermaster = new Quartermaster(this);
         fieldKitchenWithinCapacity = false;
         fameAndInfamy = new FameAndInfamyController();
-        autoResolveBehaviorSettings = BehaviorSettingsFactory.getInstance().DEFAULT_BEHAVIOR;
     }
 
     /**
@@ -3679,14 +3674,14 @@ public class Campaign implements ITechManager {
                                 (AtBDynamicScenario) scenario, contract.getStratconCampaignState());
 
                         if (stub) {
+                            scenario.convertToStub(this, ScenarioStatus.DEFEAT);
+                            addReport("Failure to deploy for " + scenario.getName() + " resulted in defeat.");
+
                             // I really don't like checking against a String here, but I couldn't find a way to
                             // fetch the scenario's original template
                             if (Objects.equals(scenario.getName(), "Emergency Convoy Defense")) {
                                 processAbandonedConvoy(contract, (AtBDynamicScenario) scenario);
                             }
-
-                            scenario.convertToStub(this, ScenarioStatus.DEFEAT);
-                            addReport("Failure to deploy for " + scenario.getName() + " resulted in defeat.");
                         } else {
                             scenario.clearAllForcesAndPersonnel(this);
                         }
@@ -3747,6 +3742,16 @@ public class Campaign implements ITechManager {
         }
     }
 
+    /**
+     * Processes an abandoned convoy. The player is presented with a defeat dialog,
+     * and if they have independent command rights, it checks each player template force in the scenario
+     * for being a convoy force. If it is a convoy force, its units are treated as abandoned units.
+     * Each crew member of these units is set as either KIA or POW based on a die roll.
+     * It finally removes each unit from the campaign.
+     *
+     * @param contract The current {@link AtBContract}.
+     * @param scenario The relevant {@link AtBDynamicScenario}.
+     */
     private void processAbandonedConvoy(AtBContract contract, AtBDynamicScenario scenario) {
         convoyFinalMessageDialog(this, contract.getEmployerFaction());
 
@@ -3761,7 +3766,9 @@ public class Campaign implements ITechManager {
                             List<Person> crew = new ArrayList<>(unit.getCrew());
                             for (Person crewMember : crew) {
                                 PersonnelStatus status = KIA;
-                                if (Compute.d6(2) < 5) {
+                                // We're using the CamOps rules for infantry survival here and
+                                // assuming anyone who isn't dead has been captured.
+                                if (Compute.d6(2) > 7) {
                                     status = PersonnelStatus.POW;
                                 }
                                 crewMember.changeStatus(this, currentDay, status);
@@ -3826,7 +3833,10 @@ public class Campaign implements ITechManager {
 
                 addReport(report);
 
-
+                // Resupply
+                if (getLocation().isOnPlanet() && getLocation().getCurrentSystem().equals(contract.getSystem())) {
+                    processResupply(contract);
+                }
             }
         }
 
@@ -3848,12 +3858,6 @@ public class Campaign implements ITechManager {
                     }
                 }
             }
-
-            // Supply Drops
-            logger.info("Campaign.java");
-            SupplyDrop supplyDrops = new SupplyDrop(this, contract, false, false);
-            int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
-            supplyDrops.getSupplyDropParts(dropCount);
         }
     }
 
@@ -4444,11 +4448,11 @@ public class Campaign implements ITechManager {
             }
         }
 
-        // Supply Drops
+        // Resupplys
         // TODO REMOVE THIS BEFORE MERGING!!!
-//        SupplyDrop supplyDrops = new SupplyDrop(this, faction,
-//            faction, true);
-//        supplyDrops.getLosTechCache();
+        //        Resupply supplyDrops = new Resupply(this, faction,
+        //            faction, true);
+        //        supplyDrops.getLosTechCache();
 
         // This must be the last step before returning true
         MekHQ.triggerEvent(new NewDayEvent(this));
@@ -5623,7 +5627,6 @@ public class Campaign implements ITechManager {
             MHQXMLUtility.writeSimpleXMLTag(pw, indent, "shipSearchType", shipSearchType);
             MHQXMLUtility.writeSimpleXMLTag(pw, indent, "shipSearchResult", shipSearchResult);
             MHQXMLUtility.writeSimpleXMLTag(pw, indent, "shipSearchExpiration", getShipSearchExpiration());
-            MHQXMLUtility.writeSimpleXMLTag(pw, indent, "autoResolveBehaviorSettings", autoResolveBehaviorSettings.getDescription());
         }
 
         retirementDefectionTracker.writeToXML(pw, indent);
@@ -8459,13 +8462,4 @@ public class Campaign implements ITechManager {
     public boolean showExtinct() {
         return !campaignOptions.isDisallowExtinctStuff();
     }
-
-    public BehaviorSettings getAutoResolveBehaviorSettings() {
-        return autoResolveBehaviorSettings;
-    }
-
-    public void setAutoResolveBehaviorSettings(BehaviorSettings settings) {
-        autoResolveBehaviorSettings = settings;
-    }
-
 }
