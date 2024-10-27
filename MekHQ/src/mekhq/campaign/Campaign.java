@@ -3789,7 +3789,11 @@ public class Campaign implements ITechManager {
 
                 addReport(report);
 
-
+                // Resupply
+                logger.info("Campaign.java");
+                Resupply supplyDrops = new Resupply(this, contract, false, false);
+                int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
+                supplyDrops.getResupplyParts(dropCount);
             }
         }
 
@@ -3804,12 +3808,6 @@ public class Campaign implements ITechManager {
                     }
                 }
             }
-
-            // Resupplys
-            logger.info("Campaign.java");
-            Resupply supplyDrops = new Resupply(this, contract, false, false);
-            int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
-            supplyDrops.getResupplyParts(dropCount);
         }
     }
 
