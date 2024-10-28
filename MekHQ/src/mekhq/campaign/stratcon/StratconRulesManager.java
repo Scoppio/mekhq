@@ -192,41 +192,30 @@ public class StratconRulesManager {
     }
 
     /**
-     * Generates a StratCon scenario.
-     * This is a utility method that allows us to generate a scenario quickly without specifying
-     * track state and scenario template.
+     * Creates a new StratCon scenario, placing it in an unoccupied location on the specified track.
+     * If no track is specified, a random one will be chosen.
+     * An optional scenario template can be applied.
+     * This method is based on {@code generateScenariosForTrack()}, designed to simplify the
+     * process by which external classes can add new StratCon scenarios.
      *
-     * @param campaign The current campaign.
-     * @param contract The contract associated with the scenario.
-     * @return A newly generated {@link StratconScenario}, or {@code null} if scenario creation fails.
-     */
-    @Nullable
-    public static StratconScenario generateExternalScenario(Campaign campaign, AtBContract contract) {
-        return generateExternalScenario(campaign, contract, null, null);
-    }
-
-    /**
-     * Generates a new StratCon scenario using advanced configuration.
-     * It provides a scenario based on a given campaign, contract, track, template.
-     * This is meant for scenario control on a higher level than the overloading methods.
-     *
-     * @param campaign The current campaign.
-     * @param contract The contract associated with the scenario.
+     * @param campaign The campaign object encapsulating the current campaign state.
+     * @param contract The contract associated with the current scenario.
      * @param track    The {@link StratconTrackState} the scenario should be assigned to, or
      *                 {@code null} to select a random track.
      * @param template A specific {@link ScenarioTemplate} to use for scenario generation,
      *                 or {@code null} to select scenario template randomly.
-     * @return A newly generated {@link StratconScenario}, or {@code null} if scenario creation fails.
+     * @return
      */
-     @Nullable
      public static StratconScenario generateExternalScenario(Campaign campaign, AtBContract contract,
                                     @Nullable StratconTrackState track, @Nullable ScenarioTemplate template) {
          // If we're not generating for a specific track, randomly pick one.
          if (track == null) {
              track = getRandomTrack(contract);
 
-             if (track == null) {
-                 logger.error("Failed to generate a random track, aborting scenario generation.");
+             if (!tracks.isEmpty()) {
+                 track = tracks.get(rand.nextInt(tracks.size()));
+             } else {
+                 logger.error("No tracks available. Aborting scenario generation.");
                  return null;
              }
          }
@@ -242,7 +231,7 @@ public class StratconRulesManager {
          StratconCoords scenarioCoords = getUnoccupiedCoords(track);
 
          if (scenarioCoords == null) {
-             logger.warn("Target track is full, aborting scenario generation.");
+             logger.warn("Target track is full, aborting scenario generation");
              return null;
          }
 
@@ -290,26 +279,6 @@ public class StratconRulesManager {
 
          // We return the scenario in case we want to make specific changes.
          return scenario;
-     }
-
-    /**
-     * Fetches a random {@link StratconTrackState} from the {@link StratconCampaignState}.
-     * If no tracks are present, it logs an error message and returns {@code null}.
-     *
-     * @param contract The {@link AtBContract} from which the track state will be fetched.
-     * @return The randomly chosen {@link StratconTrackState}, or {@code null} if no tracks are available.
-     */
-     @Nullable
-     public static StratconTrackState getRandomTrack(AtBContract contract) {
-          List<StratconTrackState> tracks = contract.getStratconCampaignState().getTracks();
-          Random rand = new Random();
-
-          if (!tracks.isEmpty()) {
-               return tracks.get(rand.nextInt(tracks.size()));
-          } else {
-               logger.error("No tracks available. Unable to fetch random track");
-               return null;
-          }
      }
 
     /**
