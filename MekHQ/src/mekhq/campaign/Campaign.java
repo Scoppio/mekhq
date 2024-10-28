@@ -274,6 +274,7 @@ public class Campaign implements ITechManager {
     private final Quartermaster quartermaster;
     private StoryArc storyArc;
     private FameAndInfamyController fameAndInfamy;
+    private BehaviorSettings autoResolveBehaviorSettings;
 
     private final transient ResourceBundle resources = ResourceBundle.getBundle("mekhq.resources.Campaign",
             MekHQ.getMHQOptions().getLocale());
@@ -341,6 +342,7 @@ public class Campaign implements ITechManager {
         quartermaster = new Quartermaster(this);
         fieldKitchenWithinCapacity = false;
         fameAndInfamy = new FameAndInfamyController();
+        autoResolveBehaviorSettings = BehaviorSettingsFactory.getInstance().DEFAULT_BEHAVIOR;
     }
 
     /**
@@ -3834,16 +3836,9 @@ public class Campaign implements ITechManager {
                 addReport(report);
 
                 // Resupply
-<<<<<<< HEAD
                 if (getLocation().isOnPlanet() && getLocation().getCurrentSystem().equals(contract.getSystem())) {
                     processResupply(contract);
                 }
-=======
-                logger.info("Campaign.java");
-                Resupply resupplies = new Resupply(this, contract, false, false);
-                int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
-                resupplies.getResupplyParts(dropCount);
->>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
             }
         }
 
@@ -5634,6 +5629,7 @@ public class Campaign implements ITechManager {
             MHQXMLUtility.writeSimpleXMLTag(pw, indent, "shipSearchType", shipSearchType);
             MHQXMLUtility.writeSimpleXMLTag(pw, indent, "shipSearchResult", shipSearchResult);
             MHQXMLUtility.writeSimpleXMLTag(pw, indent, "shipSearchExpiration", getShipSearchExpiration());
+            MHQXMLUtility.writeSimpleXMLTag(pw, indent, "autoResolveBehaviorSettings", autoResolveBehaviorSettings.getDescription());
         }
 
         retirementDefectionTracker.writeToXML(pw, indent);
@@ -8468,5 +8464,13 @@ public class Campaign implements ITechManager {
     @Override
     public boolean showExtinct() {
         return !campaignOptions.isDisallowExtinctStuff();
+    }
+
+    public BehaviorSettings getAutoResolveBehaviorSettings() {
+        return autoResolveBehaviorSettings;
+    }
+
+    public void setAutoResolveBehaviorSettings(BehaviorSettings settings) {
+        autoResolveBehaviorSettings = settings;
     }
 }
