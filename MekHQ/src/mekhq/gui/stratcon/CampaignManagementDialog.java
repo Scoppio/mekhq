@@ -310,12 +310,12 @@ public class CampaignManagementDialog extends JDialog {
 
     private void requestResupply(ActionEvent e) {
         if (currentCampaignState.getSupportPoints() > 1) {
-            resupplyDialog();
+            supplyDropDialog();
         } else {
             LogManager.getLogger().info("CampaignManagementDialog.java 1");
             AtBContract contract = currentCampaignState.getContract();
-            Resupply resupplies = new Resupply(campaign, contract, false, false);
-            resupplies.getResupplyParts(1);
+            Resupply supplyDrops = new Resupply(campaign, contract, false, false);
+            supplyDrops.getResupplyParts(1);
 
             currentCampaignState.useSupportPoint();
         }
@@ -324,7 +324,7 @@ public class CampaignManagementDialog extends JDialog {
         parent.updateCampaignState();
     }
 
-    public void resupplyDialog() {
+    public void supplyDropDialog() {
         final JDialog dialog = new JDialog();
         dialog.setLayout(new GridBagLayout());
         dialog.setTitle("Requesting Resupply");
@@ -360,8 +360,8 @@ public class CampaignManagementDialog extends JDialog {
 
             LogManager.getLogger().info("CampaignManagementDialog.java 1");
             AtBContract contract = currentCampaignState.getContract();
-            Resupply resupplies = new Resupply(campaign, contract, false, false);
-            resupplies.getResupplyParts((int) numberModel.getValue());
+            Resupply supplyDrops = new Resupply(campaign, contract, false, false);
+            supplyDrops.getResupplyParts((int) numberModel.getValue());
             currentCampaignState.useSupportPoints((int) numberModel.getValue());
         });
 

@@ -44,8 +44,6 @@ import mekhq.campaign.unit.Unit;
 import mekhq.campaign.universe.Faction;
 import mekhq.campaign.universe.Factions;
 import org.apache.commons.math3.util.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +69,6 @@ import static mekhq.utilities.ReportingUtilities.CLOSING_SPAN_TAG;
 import static mekhq.utilities.ReportingUtilities.spanOpeningWithCustomColor;
 
 public class Resupply {
-    private static final Logger log = LogManager.getLogger(Resupply.class);
     final private Campaign campaign;
     final private AtBContract contract;
     final private Faction employerFaction;
@@ -368,6 +365,10 @@ public class Resupply {
                 Compute.randomInt(20) + STATUS_AFTERWARD);
             isIntercepted = true;
         } else if (Compute.randomInt(10) < interceptionChance) {
+            message = resources.getString(STATUS_FORWARD + "Intercepted" +
+                Compute.randomInt(20) + STATUS_AFTERWARD);
+            isIntercepted = true;
+        } else if (Compute.randomInt(10) < interceptionChance) {
             if (Compute.d6() == 1) {
                 message = resources.getString(STATUS_FORWARD + Compute.randomInt(100)
                     + STATUS_AFTERWARD);
@@ -380,19 +381,6 @@ public class Resupply {
 
                 message = resources.getString(STATUS_FORWARD + "Enemy" + morale
                     + Compute.randomInt(50) + STATUS_AFTERWARD);
-            }
-        }
-
-        Integer targetConvoy = null;
-        if (contract.getCommandRights().isIndependent()) {
-            targetConvoy = getRandomConvoy();
-
-            if (message.isEmpty()) {
-                interceptionChance = (int) round((double) interceptionChance / 2);
-            }
-
-            if (campaign.getCampaignOptions().isUseFatigue()) {
-                increaseFatigue(interceptionChance);
             }
         }
 
@@ -493,7 +481,8 @@ public class Resupply {
                     // Announce the situation to the player and then, if the player is using
                     // StratCon generate a scenario
                     if (campaign.getCampaignOptions().isUseStratCon()) {
-                        ScenarioTemplate template = ScenarioTemplate.Deserialize("data/scenariotemplates/Emergency Convoy Defense.xml");
+                        ScenarioTemplate template = ScenarioTemplate.Deserialize(
+                            "data/scenariotemplates/Emergency Convoy Defense.xml");
                         StratconScenario scenario = generateExternalScenario(campaign, contract,
                             null, template);
 
@@ -530,7 +519,7 @@ public class Resupply {
                             // If we failed to generate a scenario, for whatever reason, we don't
                             // want the player confused why there isn't a scenario, so we offer
                             // this fluffy response.
-                            campaign.addReport(String.format(resources.getString("convoyDestroyed.text.text"),
+                            campaign.addReport(String.format(resources.getString("convoyDestroyed.text"),
                                 spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
                                 CLOSING_SPAN_TAG));
                         }
@@ -572,6 +561,7 @@ public class Resupply {
         if (isIntroduction) {
             message = String.format(resources.getString("logisticsMessage.text"),
                 getCommanderTitle(campaign, false)) + "<br>";
+                getCommanderTitle(campaign, false)) + "<br>";
 
             if (logisticsOfficer != null) {
                 speaker = logisticsOfficer.getFullTitle();
@@ -580,36 +570,7 @@ public class Resupply {
                     campaign.getName());
             }
         } else {
-            if (isIntercepted) {
-                String coords = resources.getString("static.text");
-                if (convoyGridReference != null) {
-                    coords = convoyGridReference.toBTString();
-                }
-
-                String sector = resources.getString("hiss.text");
-                if (track != null) {
-                    sector = track.getDisplayableName();
-                }
-
-                message = String.format(message, getCommanderTitle(campaign, false),
-                    sector, coords);
-            } else {
-                message = String.format(message, getCommanderTitle(campaign, false));
-            }
-
-            if (contract.getCommandRights().isIndependent()) {
-                if (targetConvoy != null) {
-                    speaker = getConvoySpeaker(targetConvoy);
-                }
-
-                if (speaker == null) {
-                    speaker = String.format(resources.getString("dialogBorderConvoySpeakerDefault.text"),
-                        campaign.getName());
-                }
-            } else {
-                speaker = String.format(resources.getString("dialogBorderConvoySpeakerDefault.text"),
-                    contract.getEmployer());
-            }
+            message = String.format(message, getCommanderTitle(campaign, false));
         }
 
         JLabel description = new JLabel(
@@ -643,314 +604,6 @@ public class Resupply {
         dialog.setVisible(true);
     }
 
-    @Nullable
-    private ImageIcon getSpeakerIcon(Integer targetConvoy, boolean isIntroduction, Person logisticsOfficer) {
-        ImageIcon speakerIcon = null;
-        if (isIntroduction) {
-            if (logisticsOfficer == null) {
-                speakerIcon = getFactionLogo(campaign, campaign.getFaction().getShortName(),
-                    true);
-            } else {
-                speakerIcon = logisticsOfficer.getPortrait().getImageIcon();
-            }
-        } else {
-            if (contract.getCommandRights().isIndependent()) {
-                speakerIcon = getIndependentIconLabel(targetConvoy);
-            }
-
-            if (speakerIcon == null) {
-                if (contract.getCommandRights().isIndependent()) {
-                    speakerIcon = getFactionLogo(campaign, campaign.getFaction().getShortName(),
-                        true);
-                } else {
-                    speakerIcon = getFactionLogo(campaign, employerFaction.getShortName(),
-                        true);
-                }
-            }
-        }
-        return speakerIcon;
-    }
-
-    /**
-     * Generates and displays the 'swindled' follow-up dialog.
-     *
-     * @param message The text message to be displayed in the dialog detailing the swindle event.
-     */
-    public void createSwindledMessage(String message) {
-        // Dialog dimensions and representative
-        final int DIALOG_WIDTH = 400;
-        final int DIALOG_HEIGHT = 200;
-
-        // Creates and sets up the dialog
-        JDialog dialog = new JDialog();
-        dialog.setTitle(resources.getString("dialog.title"));
-        dialog.setLayout(new BorderLayout());
-        dialog.setSize(UIUtil.scaleForGUI(DIALOG_WIDTH, DIALOG_HEIGHT));
-        dialog.setLocationRelativeTo(null);
-
-        // Prepares and adds the icon of the representative as a label
-        JLabel iconLabel = new JLabel();
-        iconLabel.setHorizontalAlignment(JLabel.CENTER);
-
-        ImageIcon factionLogo = getFactionLogo(campaign, "PIR", true);
-        factionLogo = scaleImageIconToWidth(factionLogo, UIUtil.scaleForGUI(100));
-        iconLabel.setIcon(factionLogo);
-        dialog.add(iconLabel, BorderLayout.NORTH);
-
-        // Prepares and adds the description
-        JLabel description = new JLabel(
-            String.format("<html><div style='width: %s; text-align:center;'>%s</div></html>",
-            UIUtil.scaleForGUI(DIALOG_WIDTH), message));
-        description.setHorizontalAlignment(JLabel.CENTER);
-        dialog.add(description, BorderLayout.CENTER);
-
-        JPanel descriptionPanel = new JPanel();
-        descriptionPanel.setBorder(BorderFactory.createTitledBorder(
-            String.format(resources.getString("dialogBorderTitle.text"), "")));
-        descriptionPanel.add(description);
-        dialog.add(descriptionPanel, BorderLayout.CENTER);
-
-        // Prepares and adds the confirm button
-        JButton confirmButton = new JButton(resources.getString("logisticsDestroyed.text"));
-        confirmButton.addActionListener(e -> dialog.dispose());
-        dialog.add(confirmButton,  BorderLayout.SOUTH);
-
-        // Pack, position and display the dialog
-        dialog.pack();
-        dialog.setModal(true);
-        dialog.setLocationRelativeTo(null);
-        dialog.setVisible(true);
-    }
-
-    /**
-     * Increases the fatigue convoy crews.
-     *
-     * @param targetConvoy The id of the convoy whose crew's fatigue should be increased.
-     */
-    private void increaseFatigue(Integer targetConvoy) {
-        if (targetConvoy != null) {
-            Force convoy = campaign.getForce(targetConvoy);
-
-            if (convoy != null) {
-                for (UUID unitId : convoy.getUnits()) {
-                    Unit unit = campaign.getUnit(unitId);
-
-                    if (unit != null) {
-                        for (Person crewMember : unit.getCrew()) {
-                            crewMember.increaseFatigue(1);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Scales an {@link ImageIcon} to the specified width while maintaining its aspect ratio.
-     *
-     * @param icon  The {@link ImageIcon} to be scaled.
-     * @param width The desired width.
-     * @return The scaled {@link ImageIcon}.
-     */
-    static ImageIcon scaleImageIconToWidth(ImageIcon icon, int width) {
-        int height = (int) Math.ceil((double) width * icon.getIconHeight() / icon.getIconWidth());
-        Image image = icon.getImage();
-        Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(scaledImage);
-    }
-
-    /**
-     * Retrieves the speaker of the convoy.
-     *
-     * @param targetConvoy    The relevant convoy.
-     * @return The speaker of the convoy.
-     */
-    private String getConvoySpeaker(Integer targetConvoy) {
-        Force convoy = campaign.getForce(targetConvoy);
-
-        String speaker = null;
-
-        if (convoy != null) {
-            UUID convoyCommanderId = convoy.getForceCommanderID();
-
-            if (convoyCommanderId != null) {
-                Person convoyCommander = campaign.getPerson(convoyCommanderId);
-
-                if (convoyCommander != null) {
-                    speaker = convoyCommander.getFullTitle();
-                }
-            }
-        }
-
-        if (convoy != null) {
-            speaker = speaker + ", " + convoy.getName();
-        } else {
-            speaker = String.format(resources.getString("dialogBorderConvoySpeakerDefault.text"),
-                campaign.getName());
-        }
-        return speaker;
-    }
-
-    /**
-     * Retrieves the icon of the convoy. This should only be used when the contract has Independent
-     * command level (i.e., if the convoy is player owned).
-     *
-     * @param targetConvoy The convoy target.
-     * @return The {@link ImageIcon} of the convoy.
-     */
-    @Nullable
-    private ImageIcon getIndependentIconLabel(Integer targetConvoy) {
-        if (targetConvoy != null) {
-            Force convoy = campaign.getForce(targetConvoy);
-
-            if (convoy != null) {
-                UUID convoyCommanderId = convoy.getForceCommanderID();
-
-                if (convoyCommanderId != null) {
-                    Person convoyCommander = campaign.getPerson(convoyCommanderId);
-
-                    if (convoyCommander != null) {
-                        return convoyCommander.getPortrait().getImageIcon();
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Processes the interception of a convoy.
-     *
-     * @param droppedItems         List of items dropped by the convoy. Can be {@link null}.
-     * @param droppedUnits         List of units dropped by the convoy. Can be {@link null}.
-     * @param cashReward           The amount of cash reward.
-     * @param isIndependent        Boolean indicating if contract command level is independent.
-     * @param targetConvoy         The target convoy.
-     * @param track                The track reference for the convoy's location.
-     * @param convoyGridReference  The grid reference for the convoy's location.
-     */
-    private void processConvoyInterception(List<Part> droppedItems, List<Unit> droppedUnits,
-                                           Money cashReward, boolean isIndependent, Integer targetConvoy,
-                                           StratconTrackState track, StratconCoords convoyGridReference) {
-        String templateAddress = "data/scenariotemplates/Emergency Convoy Defense.xml";
-
-        if (isIndependent) {
-            templateAddress = "data/scenariotemplates/Emergency Convoy Defense - Independent.xml";
-        }
-        ScenarioTemplate template = ScenarioTemplate.Deserialize(templateAddress);
-
-        if (template == null) {
-            campaign.addReport(String.format(resources.getString("convoyErrorTemplate.text"),
-                spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
-                templateAddress, CLOSING_SPAN_TAG));
-            deliverDrop(droppedItems, droppedUnits, cashReward);
-            return;
-        }
-
-        if (track == null) {
-            campaign.addReport(String.format(resources.getString("convoyErrorTracks.text"),
-                spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
-                templateAddress, CLOSING_SPAN_TAG));
-            deliverDrop(droppedItems, droppedUnits, cashReward);
-            return;
-        }
-        StratconScenario scenario = generateExternalScenario(campaign, contract, track, convoyGridReference, template);
-
-        // If we successfully generated a scenario, we need to make a couple of final
-        // adjustments, including assigning the Resupply contents as loot and
-        // assigning a player convoy (if appropriate)
-        if (scenario != null) {
-            AtBDynamicScenario backingScenario = scenario.getBackingScenario();
-            backingScenario.setDate(campaign.getLocalDate());
-
-            if (targetConvoy == null) {
-                campaign.addReport(String.format(resources.getString("convoyErrorPlayerConvoy.text"),
-                    spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
-                    templateAddress, CLOSING_SPAN_TAG));
-                deliverDrop(droppedItems, droppedUnits, cashReward);
-                return;
-            }
-
-            backingScenario.addForce(targetConvoy, "Player");
-            campaign.getForce(targetConvoy).setScenarioId(backingScenario.getId(), campaign);
-            scenario.commitPrimaryForces();
-
-            Loot loot = new Loot();
-
-            if (droppedItems != null) {
-                for (Part part : droppedItems) {
-                    loot.addPart(part);
-                }
-            }
-
-            if (droppedUnits != null) {
-                for (Unit unit : droppedUnits) {
-                    loot.addUnit(unit.getEntity());
-                }
-            }
-
-            if (!cashReward.isZero()) {
-                loot.setCash(cashReward);
-            }
-
-            backingScenario.addLoot(loot);
-
-            // Announce the situation to the player
-            campaign.addReport(String.format(resources.getString("convoyInterceptedStratCon.text"),
-                spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
-                CLOSING_SPAN_TAG));
-        } else {
-            // If we failed to generate a scenario, for whatever reason, we don't
-            // want the player confused why there isn't a scenario, so we offer
-            // this fluffy response.
-            campaign.addReport(String.format(resources.getString("convoyDestroyed.text"),
-                spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
-                CLOSING_SPAN_TAG));
-        }
-    }
-
-    /**
-     * Picks a random convoy from available ones.
-     *
-     * @return The ID of the randomly selected convoy.
-     */
-    @Nullable
-    private Integer getRandomConvoy() {
-        // First, we gather a set of all forces that are already deployed to a track, so we can
-        // eliminate them later in the next step
-        Set<Integer> forcesInTracks = campaign.getActiveAtBContracts().stream()
-            .flatMap(contract -> contract.getStratconCampaignState().getTracks().stream())
-            .flatMap(track -> track.getAssignedForceCoords().keySet().stream())
-            .collect(Collectors.toSet());
-
-        // Then, we build a list of all valid convoys.
-        List<Integer> validConvoys = new ArrayList<>();
-        for (Integer key : campaign.getLances().keySet()) {
-            Force force = campaign.getForce(key);
-            if (force != null
-                && !force.isDeployed()
-                && force.isConvoyForce()
-                && !forcesInTracks.contains(force.getId())
-                && force.getSubForces().isEmpty()) {
-                validConvoys.add(force.getId());
-            }
-        }
-
-        // Then we return the chosen Force ID
-        if (validConvoys.isEmpty()) {
-            return null;
-        } else {
-            int randomIndex = random.nextInt(validConvoys.size());
-            return validConvoys.get(randomIndex);
-        }
-    }
-
-    /**
-     * Creates the final message dialog for the convoy.
-     *
-     * @param campaign        The current campaign.
-     * @param employerFaction The employing faction.
-     */
     public static void convoyFinalMessageDialog(Campaign campaign, Faction employerFaction) {
         ResourceBundle resources = ResourceBundle.getBundle("mekhq.resources.Resupply");
 
@@ -996,12 +649,6 @@ public class Resupply {
         dialog.setVisible(true);
     }
 
-    /**
-     * Picks a logistics representative from available personnel.
-     *
-     * @return The chosen logistics representative.
-     */
-    @Nullable
     private Person pickLogisticsRepresentative() {
         Person highestRankedCharacter = null;
 
@@ -1019,14 +666,7 @@ public class Resupply {
         return highestRankedCharacter;
     }
 
-    /**
-     * Retrieves the commander's title.
-     *
-     * @param campaign       The current campaign.
-     * @param includeSurname {@link Boolean} indicating if the surname is to be included.
-     * @return The title of the commander.
-     */
-    static String getCommanderTitle(Campaign campaign, boolean includeSurname) {
+    private static String getCommanderTitle(Campaign campaign, boolean includeSurname) {
         ResourceBundle resources = ResourceBundle.getBundle("mekhq.resources.Resupply");
         String placeholder = resources.getString("commander.text");
         Person commander = campaign.getFlaggedCommander();

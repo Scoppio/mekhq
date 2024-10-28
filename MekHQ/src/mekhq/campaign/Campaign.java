@@ -141,8 +141,6 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import static java.lang.Math.round;
-import static mekhq.campaign.mission.resupplyAndCaches.Resupply.RESUPPLY_LOAD_SIZE;
 import static mekhq.campaign.mission.resupplyAndCaches.Resupply.convoyFinalMessageDialog;
 import static mekhq.campaign.personnel.backgrounds.BackgroundsController.randomMercenaryCompanyNameGenerator;
 import static mekhq.campaign.personnel.education.EducationController.getAcademy;
@@ -3682,7 +3680,7 @@ public class Campaign implements ITechManager {
                             // I really don't like checking against a String here, but I couldn't find a way to
                             // fetch the scenario's original template
                             if (Objects.equals(scenario.getName(), "Emergency Convoy Defense")) {
-                                processAbandonedConvoy(contract, (AtBDynamicScenario) scenario);
+                                convoyFinalMessageDialog(this, contract.getEmployerFaction());
                             }
                         } else {
                             scenario.clearAllForcesAndPersonnel(this);
@@ -3850,10 +3848,10 @@ public class Campaign implements ITechManager {
         for (AtBContract contract : getActiveAtBContracts()) {
             // TODO REMOVE THIS
             // Resupply
-            logger.info("Campaign.java");
-            Resupply resupplies = new Resupply(this, contract, false, false);
-            int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
-            resupplies.getResupplyParts(dropCount);
+//            logger.info("Campaign.java");
+//            Resupply resupplies = new Resupply(this, contract, false, false);
+//            int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
+//            resupplies.getResupplyParts(dropCount);
 
             if (campaignOptions.isUseGenericBattleValue()) {
                 if (contract.getStartDate().equals(getLocalDate())) {
