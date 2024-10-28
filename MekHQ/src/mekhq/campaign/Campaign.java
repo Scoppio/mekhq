@@ -3836,8 +3836,11 @@ public class Campaign implements ITechManager {
                 addReport(report);
 
                 // Resupply
+                logger.info("Campaign.java");
                 if (getLocation().isOnPlanet() && getLocation().getCurrentSystem().equals(contract.getSystem())) {
-                    processResupply(contract);
+                    Resupply resupplies = new Resupply(this, contract, false, false);
+                    int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
+                    resupplies.getResupplyParts(dropCount);
                 }
             }
         }
@@ -3847,10 +3850,10 @@ public class Campaign implements ITechManager {
         for (AtBContract contract : getActiveAtBContracts()) {
             // TODO REMOVE THIS
             // Resupply
-//            logger.info("Campaign.java");
-//            Resupply resupplies = new Resupply(this, contract, false, false);
-//            int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
-//            resupplies.getResupplyParts(dropCount);
+            logger.info("Campaign.java");
+            Resupply resupplies = new Resupply(this, contract, false, false);
+            int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
+            resupplies.getResupplyParts(dropCount);
 
             if (campaignOptions.isUseGenericBattleValue()) {
                 if (contract.getStartDate().equals(getLocalDate())) {

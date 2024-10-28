@@ -68,10 +68,10 @@ public class StratconContractInitializer {
         // scenarios
         // when objective is allied/hostile facility, place those facilities
 
-        int maximumTrackIndex = Math.max(0, contract.getRequiredLances() / NUM_LANCES_PER_TRACK);
+        int numTracks = Math.max(1, contract.getRequiredLances() / NUM_LANCES_PER_TRACK);
         int planetaryTemperature = campaign.getLocation().getPlanet().getTemperature(campaign.getLocalDate());
 
-        for (int x = 0; x < maximumTrackIndex; x++) {
+        for (int x = 0; x < numTracks; x++) {
             int scenarioOdds = contractDefinition.getScenarioOdds()
                     .get(Compute.randomInt(contractDefinition.getScenarioOdds().size()));
             int deploymentTime = contractDefinition.getDeploymentTimes()
@@ -289,13 +289,6 @@ public class StratconContractInitializer {
 
             StratconCoords coords = getUnoccupiedCoords(trackState);
 
-            if (coords == null) {
-                logger.warn(String.format("Unable to place facility on track %s," +
-                        " as all coords were occupied. Aborting.",
-                    trackState.getDisplayableName()));
-                return;
-            }
-
             trackState.addFacility(coords, sf);
 
             if (strategicObjective) {
@@ -343,13 +336,6 @@ public class StratconContractInitializer {
 
             StratconCoords coords = getUnoccupiedCoords(trackState);
 
-            if (coords == null) {
-                logger.error(String.format("Unable to place objective scenario on track %s," +
-                        " as all coords were occupied. Aborting.",
-                    trackState.getDisplayableName()));
-                return;
-            }
-
             // facility
             if (template.isFacilityScenario()) {
                 StratconFacility facility = template.isHostileFacility()
@@ -390,24 +376,18 @@ public class StratconContractInitializer {
      * Utility function that, given a track state, picks a random set of unoccupied
      * coordinates.
      */
-    public static StratconCoords getUnoccupiedCoords(StratconTrackState trackState) {
-        // Maximum number of attempts
-        int maxAttempts = trackState.getWidth() * trackState.getHeight();
-        int attempts = 0;
-
+    static StratconCoords getUnoccupiedCoords(StratconTrackState trackState) {
+        // plonk
         int x = Compute.randomInt(trackState.getWidth());
         int y = Compute.randomInt(trackState.getHeight());
         StratconCoords coords = new StratconCoords(x, y);
 
-        while ((trackState.getFacility(coords) != null || trackState.getScenario(coords) != null) && attempts < maxAttempts) {
+        // make sure we don't put the facility down on top of anything else
+        while ((trackState.getFacility(coords) != null) ||
+                (trackState.getScenario(coords) != null)) {
             x = Compute.randomInt(trackState.getWidth());
             y = Compute.randomInt(trackState.getHeight());
             coords = new StratconCoords(x, y);
-            attempts++;
-        }
-
-        if (attempts == maxAttempts) {
-            return null;
         }
 
         return coords;

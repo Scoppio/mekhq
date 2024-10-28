@@ -39,13 +39,14 @@ import mekhq.campaign.parts.enums.PartQuality;
 import mekhq.campaign.parts.equipment.AmmoBin;
 import mekhq.campaign.personnel.Person;
 import mekhq.campaign.personnel.enums.PersonnelRole;
-import mekhq.campaign.stratcon.StratconCoords;
-import mekhq.campaign.stratcon.StratconScenario;
+import mekhq.campaign.stratcon.StratconCampaignState;
 import mekhq.campaign.stratcon.StratconTrackState;
 import mekhq.campaign.unit.Unit;
 import mekhq.campaign.universe.Faction;
 import mekhq.campaign.universe.Factions;
 import org.apache.commons.math3.util.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,15 +65,14 @@ import static mekhq.campaign.finances.enums.TransactionType.EQUIPMENT_PURCHASE;
 import static mekhq.campaign.mission.enums.AtBMoraleLevel.CRITICAL;
 import static mekhq.campaign.mission.enums.AtBMoraleLevel.DOMINATING;
 import static mekhq.campaign.mission.enums.AtBMoraleLevel.STALEMATE;
-import static mekhq.campaign.stratcon.StratconContractInitializer.getUnoccupiedCoords;
-import static mekhq.campaign.stratcon.StratconRulesManager.generateExternalScenario;
-import static mekhq.campaign.stratcon.StratconRulesManager.getRandomTrack;
+import static mekhq.campaign.stratcon.StratconRulesManager.testMethod;
 import static mekhq.campaign.unit.Unit.getRandomUnitQuality;
 import static mekhq.campaign.universe.Factions.getFactionLogo;
 import static mekhq.utilities.ReportingUtilities.CLOSING_SPAN_TAG;
 import static mekhq.utilities.ReportingUtilities.spanOpeningWithCustomColor;
 
 public class Resupply {
+    private static final Logger log = LogManager.getLogger(Resupply.class);
     final private Campaign campaign;
     final private AtBContract contract;
     final private Faction employerFaction;
@@ -492,8 +492,22 @@ public class Resupply {
             } else {
                 if (isIntercepted) {
                     if (campaign.getCampaignOptions().isUseStratCon()) {
-                        processConvoyInterception(droppedItems, droppedUnits, cashReward,
-                            isIndependent, targetConvoy, track, convoyGridReference);
+                        StratconCampaignState campaignState = contract.getStratconCampaignState();
+
+                        // Pick a random track
+                        List<StratconTrackState> tracks = campaignState.getTracks();
+                        StratconTrackState track = tracks.get(random.nextInt(tracks.size()));
+
+                        // Announce the situation to the player
+                        campaign.addReport(String.format(resources.getString("convoyInterceptedStratCon.text"),
+                            spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
+                            CLOSING_SPAN_TAG, track.getDisplayableName()));
+
+                        // Select a set of unoccupied coordinates and generate the scenario
+                        testMethod(campaign, contract, track);
+
+                        campaign.addReport("THIS ONE /\\");
+
                     } else {
                         campaign.addReport(String.format(resources.getString("convoyInterceptedAtB.text"),
                             spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
