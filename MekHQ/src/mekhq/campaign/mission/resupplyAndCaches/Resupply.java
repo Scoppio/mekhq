@@ -32,6 +32,7 @@ import mekhq.campaign.force.Force;
 import mekhq.campaign.mission.AtBContract;
 import mekhq.campaign.mission.AtBDynamicScenario;
 import mekhq.campaign.mission.Loot;
+import mekhq.campaign.mission.ScenarioTemplate;
 import mekhq.campaign.mission.enums.AtBMoraleLevel;
 import mekhq.campaign.parts.*;
 import mekhq.campaign.parts.enums.PartQuality;
@@ -492,7 +493,9 @@ public class Resupply {
                     // Announce the situation to the player and then, if the player is using
                     // StratCon generate a scenario
                     if (campaign.getCampaignOptions().isUseStratCon()) {
-                        StratconScenario scenario = generateExternalScenario(campaign, contract, null, null);
+                        ScenarioTemplate template = ScenarioTemplate.Deserialize("data/scenariotemplates/Emergency Convoy Defense.xml");
+                        StratconScenario scenario = generateExternalScenario(campaign, contract,
+                            null, template);
 
                         // If we successfully generated a scenario, we need to make a couple of final
                         // adjustments so that the player can still get their items (if they succeed)
@@ -501,12 +504,16 @@ public class Resupply {
                             backingScenario.setDate(campaign.getLocalDate());
                             Loot loot = new Loot();
 
-                            for (Part part : droppedItems) {
-                                loot.addPart(part);
+                            if (droppedItems != null) {
+                                for (Part part : droppedItems) {
+                                    loot.addPart(part);
+                                }
                             }
 
-                            for (Unit unit : droppedUnits) {
-                                loot.addUnit(unit.getEntity());
+                            if (droppedUnits != null) {
+                                for (Unit unit : droppedUnits) {
+                                    loot.addUnit(unit.getEntity());
+                                }
                             }
 
                             if (!cashReward.isZero()) {
