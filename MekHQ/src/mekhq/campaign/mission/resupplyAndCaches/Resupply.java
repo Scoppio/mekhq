@@ -28,19 +28,26 @@ import megamek.logging.MMLogger;
 import mekhq.MekHQ;
 import mekhq.campaign.Campaign;
 import mekhq.campaign.finances.Money;
+<<<<<<< HEAD
 import mekhq.campaign.force.Force;
 import mekhq.campaign.mission.AtBContract;
 import mekhq.campaign.mission.AtBDynamicScenario;
 import mekhq.campaign.mission.Loot;
 import mekhq.campaign.mission.ScenarioTemplate;
+=======
+import mekhq.campaign.mission.AtBContract;
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
 import mekhq.campaign.mission.enums.AtBMoraleLevel;
 import mekhq.campaign.parts.*;
 import mekhq.campaign.parts.enums.PartQuality;
 import mekhq.campaign.parts.equipment.AmmoBin;
 import mekhq.campaign.personnel.Person;
 import mekhq.campaign.personnel.enums.PersonnelRole;
+<<<<<<< HEAD
 import mekhq.campaign.stratcon.StratconScenario;
 import mekhq.campaign.stratcon.StratconTrackState;
+=======
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
 import mekhq.campaign.unit.Unit;
 import mekhq.campaign.universe.Faction;
 import mekhq.campaign.universe.Factions;
@@ -61,8 +68,11 @@ import static mekhq.campaign.finances.enums.TransactionType.BONUS_EXCHANGE;
 import static mekhq.campaign.mission.enums.AtBMoraleLevel.CRITICAL;
 import static mekhq.campaign.mission.enums.AtBMoraleLevel.DOMINATING;
 import static mekhq.campaign.mission.enums.AtBMoraleLevel.STALEMATE;
+<<<<<<< HEAD
 import static mekhq.campaign.stratcon.StratconRulesManager.generateExternalScenario;
 import static mekhq.campaign.stratcon.StratconRulesManager.getRandomTrack;
+=======
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
 import static mekhq.campaign.unit.Unit.getRandomUnitQuality;
 import static mekhq.campaign.universe.Factions.getFactionLogo;
 import static mekhq.utilities.ReportingUtilities.CLOSING_SPAN_TAG;
@@ -84,7 +94,10 @@ public class Resupply {
     private final boolean EMPLOYER_IS_CLAN;
     private final Money TARGET_VALUE = Money.of(250000);
     private final LocalDate BATTLE_OF_TUKAYYID = LocalDate.of(3052, 5, 21);
+<<<<<<< HEAD
     public final static double RESUPPLY_LOAD_SIZE = 25;
+=======
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
 
     private final ResourceBundle resources = ResourceBundle.getBundle("mekhq.resources.Resupply");
     private final static MMLogger logger = MMLogger.create(Resupply.class);
@@ -293,6 +306,7 @@ public class Resupply {
             case OVERWHELMING -> 6;
         };
 
+<<<<<<< HEAD
         boolean isIntercepted = false;
         String message = "";
 
@@ -301,6 +315,12 @@ public class Resupply {
                 Compute.randomInt(20) + STATUS_AFTERWARD);
             isIntercepted = true;
         } else if (Compute.randomInt(10) < interceptionChance) {
+=======
+        boolean isDestroyed = false;
+        String message = "";
+
+        if (Compute.randomInt(10) < interceptionChance) {
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
             if (Compute.d6() == 1) {
                 message = resources.getString(STATUS_FORWARD + Compute.randomInt(100)
                     + STATUS_AFTERWARD);
@@ -314,10 +334,21 @@ public class Resupply {
                 message = resources.getString(STATUS_FORWARD + "Enemy" + morale
                     + Compute.randomInt(50) + STATUS_AFTERWARD);
             }
+<<<<<<< HEAD
         }
 
         if (!message.isEmpty()) {
             createConvoyMessage(droppedItems, droppedUnits, cashReward, message, isIntercepted);
+=======
+        } else if (Compute.randomInt(10) < interceptionChance) {
+            message = resources.getString(STATUS_FORWARD + "Intercepted" +
+                Compute.randomInt(20) + STATUS_AFTERWARD);
+            isDestroyed = true;
+        }
+
+        if (!message.isEmpty()) {
+            createConvoyMessage(droppedItems, droppedUnits, cashReward, message, isDestroyed);
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
         } else {
             campaign.addReport(String.format(resources.getString("convoySuccessful.text"),
                 spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorPositiveHexColor()),
@@ -327,13 +358,22 @@ public class Resupply {
     }
 
     public void createConvoyMessage(@Nullable List<Part> droppedItems, @Nullable List<Unit> droppedUnits,
+<<<<<<< HEAD
                                     Money cashReward, String convoyStatusMessage, boolean isIntercepted) {
         createConvoyMessage(droppedItems, droppedUnits, cashReward, convoyStatusMessage, isIntercepted,
+=======
+                                    Money cashReward, String convoyStatusMessage, boolean isDestroyed) {
+        createConvoyMessage(droppedItems, droppedUnits, cashReward, convoyStatusMessage, isDestroyed,
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
             true);
     }
 
     public void createConvoyMessage(@Nullable List<Part> droppedItems, @Nullable List<Unit> droppedUnits,
+<<<<<<< HEAD
                                        Money cashReward, String convoyStatusMessage, boolean isIntercepted,
+=======
+                                       Money cashReward, String convoyStatusMessage, boolean isDestroyed,
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
                                     boolean isIntroduction) {
         // Dialog dimensions and representative
         final int DIALOG_WIDTH = 400;
@@ -351,6 +391,7 @@ public class Resupply {
             dialog.dispose();
             if (isIntroduction) {
                 createConvoyMessage(droppedItems, droppedUnits, cashReward, convoyStatusMessage,
+<<<<<<< HEAD
                     isIntercepted, false);
             } else {
                 if (isIntercepted) {
@@ -435,6 +476,14 @@ public class Resupply {
                             spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
                             CLOSING_SPAN_TAG));
                     }
+=======
+                    isDestroyed, false);
+            } else {
+                if (isDestroyed) {
+                    campaign.addReport(String.format(resources.getString("convoyDestroyed.text"),
+                        spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
+                        CLOSING_SPAN_TAG));
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
                 } else {
                     campaign.addReport(String.format(resources.getString("convoySuccessful.text"),
                         spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorPositiveHexColor()),
@@ -475,13 +524,21 @@ public class Resupply {
         String speaker = "";
         if (isIntroduction) {
             message = String.format(resources.getString("logisticsMessage.text"),
+<<<<<<< HEAD
                 getCommanderTitle(campaign, false)) + "<br>";
+=======
+                getCommanderTitle(false)) + "<br>";
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
 
             if (logisticsOfficer != null) {
                 speaker = "<b>" + logisticsOfficer.getFullTitle() + "</b><br><br>";
             }
         } else {
+<<<<<<< HEAD
             message = String.format(message, getCommanderTitle(campaign, false));
+=======
+            message = String.format(message, getCommanderTitle(false));
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
         }
 
         JLabel description = new JLabel(
@@ -493,7 +550,11 @@ public class Resupply {
         // Prepares and adds the confirm button
         JButton confirmButton = new JButton(resources.getString("logisticsPatch.text"));
         if (!isIntroduction) {
+<<<<<<< HEAD
             if (isIntercepted) {
+=======
+            if (isDestroyed) {
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
                 confirmButton.setText(resources.getString("logisticsDestroyed.text"));
             } else {
                 confirmButton.setText(resources.getString("logisticsReceived.text"));
@@ -509,6 +570,7 @@ public class Resupply {
         dialog.setVisible(true);
     }
 
+<<<<<<< HEAD
     @Nullable
     private Integer getRandomConvoy() {
         // First, we gather a set of all forces that are already deployed to a track, so we can
@@ -585,6 +647,8 @@ public class Resupply {
         dialog.setVisible(true);
     }
 
+=======
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
     private Person pickLogisticsRepresentative() {
         Person highestRankedCharacter = null;
 
@@ -602,8 +666,12 @@ public class Resupply {
         return highestRankedCharacter;
     }
 
+<<<<<<< HEAD
     private static String getCommanderTitle(Campaign campaign, boolean includeSurname) {
         ResourceBundle resources = ResourceBundle.getBundle("mekhq.resources.Resupply");
+=======
+    private String getCommanderTitle(boolean includeSurname) {
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
         String placeholder = resources.getString("commander.text");
         Person commander = campaign.getFlaggedCommander();
 
@@ -1003,6 +1071,7 @@ public class Resupply {
     private static PartQuality getRandomPartQuality(int modifier) {
         return getRandomUnitQuality(modifier);
     }
+<<<<<<< HEAD
 
 
     public static void triggerConvoyDialog(Campaign campaign, AtBContract contract) {
@@ -1058,4 +1127,6 @@ public class Resupply {
         dialog.setModal(true);
         dialog.setVisible(true);
     }
+=======
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
 }

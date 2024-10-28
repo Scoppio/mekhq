@@ -3834,9 +3834,16 @@ public class Campaign implements ITechManager {
                 addReport(report);
 
                 // Resupply
+<<<<<<< HEAD
                 if (getLocation().isOnPlanet() && getLocation().getCurrentSystem().equals(contract.getSystem())) {
                     processResupply(contract);
                 }
+=======
+                logger.info("Campaign.java");
+                Resupply resupplies = new Resupply(this, contract, false, false);
+                int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
+                resupplies.getResupplyParts(dropCount);
+>>>>>>> 81a3265ed1 (Refactor resupply package structure and enhance resupply logic)
             }
         }
 
