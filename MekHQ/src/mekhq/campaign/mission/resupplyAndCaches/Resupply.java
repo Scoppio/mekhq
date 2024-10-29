@@ -84,7 +84,7 @@ public class Resupply {
     private final boolean EMPLOYER_IS_CLAN;
     private final Money TARGET_VALUE = Money.of(250000);
     private final LocalDate BATTLE_OF_TUKAYYID = LocalDate.of(3052, 5, 21);
-    public final static double RESUPPLY_LOAD_SIZE = 25;
+    public final static double RESUPPLY_LOAD_SIZE = 5;
 
     private final ResourceBundle resources = ResourceBundle.getBundle("mekhq.resources.Resupply");
     private final static MMLogger logger = MMLogger.create(Resupply.class);
@@ -1130,18 +1130,12 @@ public class Resupply {
         return getRandomUnitQuality(modifier);
     }
 
-    /**
-     * Triggers a dialog window providing convoy related information meant to be triggered at the
-     * beginning of an Independent contract.
-     *
-     * @param campaign The current campaign.
-     * @param contract The relevant contract.
-     */
+
     public static void triggerConvoyDialog(Campaign campaign, AtBContract contract) {
         final ResourceBundle resources = ResourceBundle.getBundle("mekhq.resources.Resupply");
 
         // Retrieves the title from the resources
-        String title = resources.getString("dialog.title");
+        String title = resources.getString("incomingTransmission.title");
 
         // An ImageIcon to hold the faction icon
         ImageIcon icon = getFactionLogo(campaign, campaign.getFaction().getShortName(), true);
@@ -1153,8 +1147,7 @@ public class Resupply {
             UIUtil.scaleForGUI(500),
             String.format(resources.getString("convoyMessage.text"),
                 getCommanderTitle(campaign, false),
-                maximumResupplySize * RESUPPLY_LOAD_SIZE, maximumResupplySize,
-                maximumResupplySize > 1 ? "s" : ""));
+                maximumResupplySize * RESUPPLY_LOAD_SIZE, maximumResupplySize));
 
         // Create a text pane to display the message
         JTextPane textPane = new JTextPane();

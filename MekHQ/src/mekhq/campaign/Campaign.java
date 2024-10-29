@@ -141,6 +141,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.round;
+import static mekhq.campaign.mission.resupplyAndCaches.Resupply.RESUPPLY_LOAD_SIZE;
 import static mekhq.campaign.mission.resupplyAndCaches.Resupply.convoyFinalMessageDialog;
 import static mekhq.campaign.personnel.backgrounds.BackgroundsController.randomMercenaryCompanyNameGenerator;
 import static mekhq.campaign.personnel.education.EducationController.getAcademy;
@@ -3836,9 +3838,7 @@ public class Campaign implements ITechManager {
                 // Resupply
                 logger.info("Campaign.java");
                 if (getLocation().isOnPlanet() && getLocation().getCurrentSystem().equals(contract.getSystem())) {
-                    Resupply resupplies = new Resupply(this, contract, false, false);
-                    int dropCount = (int) Math.max(1, Math.floor((double) contract.getRequiredLances() / 3));
-                    resupplies.getResupplyParts(dropCount);
+                    processResupply(contract);
                 }
             }
         }
