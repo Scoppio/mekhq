@@ -58,9 +58,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import static java.lang.Math.round;
 import static mekhq.campaign.finances.enums.TransactionType.BONUS_EXCHANGE;
-import static mekhq.campaign.finances.enums.TransactionType.EQUIPMENT_PURCHASE;
 import static mekhq.campaign.mission.enums.AtBMoraleLevel.CRITICAL;
 import static mekhq.campaign.mission.enums.AtBMoraleLevel.DOMINATING;
 import static mekhq.campaign.mission.enums.AtBMoraleLevel.STALEMATE;
@@ -108,23 +106,24 @@ public class Resupply {
     public Resupply(Campaign campaign, AtBContract contract, boolean skipParts, boolean skipUnits) {
         this.campaign = campaign;
         this.contract = contract;
-        employerFaction = contract.getEmployerFaction();
-        enemyFaction = contract.getEnemy();
+        this.employerFaction = contract.getEmployerFaction();
+        this.enemyFaction = contract.getEnemy();
 
         YEAR = campaign.getGameYear();
         EMPLOYER_IS_CLAN = enemyFaction.isClan();
         EMPLOYER_TECH_CODE = getTechFaction(employerFaction);
 
         if (!skipParts) {
-            collectParts();
-            partsPool = buildPool(potentialParts);
+            this.potentialParts = new HashMap<>();
+            collectParts(campaign.getUnits());
+            buildPool();
         }
 
         if (!skipUnits) {
-            potentialUnits = new ArrayList<>();
+            this.potentialUnits = new ArrayList<>();
         }
 
-        random = new Random();
+        this.random = new Random();
     }
 
     /**
@@ -157,12 +156,12 @@ public class Resupply {
 
         Map<String, Integer> partsReport = new HashMap<>();
         if (droppedItems != null) {
-            partsReport = createPartsReport(droppedItems);
+            partsReport = createPartsReport(droppedItems, campaign.getGameYear(), enemyFaction);
         }
 
         Map<String, Integer> unitsReport = new HashMap<>();
         if (droppedUnits != null) {
-            unitsReport = createUnitsReport(droppedUnits);
+            unitsReport = createUnitsReport(droppedUnits, campaign.getGameYear(), enemyFaction);
         }
 
         List<Entry<String, Integer>> entries = new ArrayList<>(partsReport.entrySet());
@@ -208,7 +207,6 @@ public class Resupply {
         }
 
         message.append("<table><tr valign='top'>")
-        message.append("<table><tr valign='top'>")
             .append("<td>").append(columns[0]).append("</td>")
             .append("<td>").append(columns[1]).append("</td>")
             .append("<td>").append(columns[2]).append("</td>")
@@ -242,17 +240,20 @@ public class Resupply {
         final String title = resources.getString("dialog.title");
 
         JDialog dialog = new JDialog();
-        dialog.setLayout(new BorderLayout());
         dialog.setSize(UIUtil.scaleForGUI(DIALOG_WIDTH, DIALOG_HEIGHT));
+        dialog.setLocationRelativeTo(null);
         dialog.setTitle(title);
-
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.pack();
+        dialog.setModal(true);
+        dialog.setLayout(new BorderLayout());
+
         ActionListener dialogActionListener = e -> {
             dialog.dispose();
 
             if (isLootOrContractEnd) {
                 deliverDrop(droppedItems, droppedUnits, cashReward);
-            } else if (!isSmuggler) {
+            } else {
                 processConvoy(droppedItems, droppedUnits, cashReward);
             }
         };
@@ -274,11 +275,7 @@ public class Resupply {
         panel.add(labelIcon);
 
         JLabel description = new JLabel(
-        JLabel description = new JLabel(
             String.format("<html><div style='width: %s; text-align:center;'>%s</div></html>",
-                UIUtil.scaleForGUI(DIALOG_WIDTH), message));
-        description.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(description);
                 UIUtil.scaleForGUI(DIALOG_WIDTH), message));
         description.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(description);
@@ -287,36 +284,11 @@ public class Resupply {
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         dialog.add(scrollPane, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
-
-        JButton confirmButton = new JButton(resources.getString("confirmAccept.text"));
-        confirmButton.addActionListener(e -> {
-            dialog.dispose();
-            campaign.getFinances().debit(EQUIPMENT_PURCHASE, campaign.getLocalDate(),
-                getSmugglerFee(droppedItems), resources.getString("smugglerFee.text"));
-            processSmuggler(droppedItems);
-        });
-
-        JButton refuseButton = new JButton(resources.getString("confirmRefuse.text"));
-        refuseButton.addActionListener(dialogActionListener);
-
         JButton okButton = new JButton(resources.getString("confirmReceipt.text"));
+        dialog.add(okButton, BorderLayout.SOUTH);
         okButton.addActionListener(dialogActionListener);
 
-        if (isSmuggler) {
-            buttonPanel.add(confirmButton);
-            buttonPanel.add(refuseButton);
-        } else {
-            buttonPanel.add(okButton);
-        }
-
-        dialog.add(buttonPanel, BorderLayout.SOUTH);
-
-        dialog.setLocationRelativeTo(null);
-        dialog.pack();
-        dialog.setModal(true);
-        dialog.setVisible(true);
+        return dialog;
     }
 
     /**
@@ -333,16 +305,21 @@ public class Resupply {
         final String STATUS_AFTERWARD = ".text";
 
         AtBMoraleLevel morale = contract.getMoraleLevel();
-        int interceptionChance = morale.ordinal();
+
+        int interceptionChance = switch (morale) {
+            case ROUTED -> 0;
+            case CRITICAL -> 1;
+            case WEAKENED -> 2;
+            case STALEMATE -> 3;
+            case ADVANCING -> 4;
+            case DOMINATING -> 5;
+            case OVERWHELMING -> 6;
+        };
 
         boolean isIntercepted = false;
         String message = "";
 
         if (Compute.randomInt(10) < interceptionChance) {
-            message = resources.getString(STATUS_FORWARD + "Intercepted" +
-                Compute.randomInt(20) + STATUS_AFTERWARD);
-            isIntercepted = true;
-        } else if (Compute.randomInt(10) < interceptionChance) {
             message = resources.getString(STATUS_FORWARD + "Intercepted" +
                 Compute.randomInt(20) + STATUS_AFTERWARD);
             isIntercepted = true;
@@ -363,8 +340,7 @@ public class Resupply {
         }
 
         if (!message.isEmpty()) {
-            createConvoyMessage(targetConvoy, droppedItems, droppedUnits, cashReward, message,
-                isIntercepted);
+            createConvoyMessage(droppedItems, droppedUnits, cashReward, message, isIntercepted);
         } else {
             campaign.addReport(String.format(resources.getString("convoySuccessful.text"),
                 spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorPositiveHexColor()),
@@ -405,14 +381,15 @@ public class Resupply {
                                     boolean isIntroduction) {
         boolean isIndependent = contract.getCommandRights().isIndependent();
         Integer targetConvoy;
-        StratconTrackState convoySector = getRandomTrack(contract);
+        StratconTrackState track = getRandomTrack(contract);
 
         StratconCoords convoyGridReference;
-        if (convoySector != null) {
-            convoyGridReference = getUnoccupiedCoords(convoySector);
+        if (track != null) {
+            convoyGridReference = getUnoccupiedCoords(track);
         } else {
             convoyGridReference = null;
         }
+
 
         if (isIndependent) {
             targetConvoy = getRandomConvoy();
@@ -435,13 +412,13 @@ public class Resupply {
         ActionListener dialogDismissActionListener = e -> {
             dialog.dispose();
             if (isIntroduction) {
-                createConvoyMessage(targetConvoy, droppedItems, droppedUnits, cashReward,
-                    convoyStatusMessage, isIntercepted, false);
+                createConvoyMessage(droppedItems, droppedUnits, cashReward, convoyStatusMessage,
+                    isIntercepted, false);
             } else {
                 if (isIntercepted) {
                     if (campaign.getCampaignOptions().isUseStratCon()) {
                         processConvoyInterception(droppedItems, droppedUnits, cashReward,
-                            isIndependent, targetConvoy, convoyGridReference);
+                            isIndependent, targetConvoy, track, convoyGridReference);
                     } else {
                         campaign.addReport(String.format(resources.getString("convoyInterceptedAtB.text"),
                             spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
@@ -510,7 +487,22 @@ public class Resupply {
                     campaign.getName());
             }
         } else {
-            message = String.format(message, getCommanderTitle(campaign, false));
+            if (isIntercepted) {
+                String coords = resources.getString("static.text");
+                if (convoyGridReference != null) {
+                    coords = convoyGridReference.toBTString();
+                }
+
+                String sector = resources.getString("hiss.text");
+                if (track != null) {
+                    sector = track.getDisplayableName();
+                }
+
+                message = String.format(message, getCommanderTitle(campaign, false),
+                    sector, coords);
+            } else {
+                message = String.format(message, getCommanderTitle(campaign, false));
+            }
 
             if (contract.getCommandRights().isIndependent()) {
                 if (targetConvoy != null) {
@@ -639,11 +631,12 @@ public class Resupply {
      * @param cashReward           The amount of cash reward.
      * @param isIndependent        Boolean indicating if contract command level is independent.
      * @param targetConvoy         The target convoy.
+     * @param track                The track reference for the convoy's location.
      * @param convoyGridReference  The grid reference for the convoy's location.
      */
     private void processConvoyInterception(List<Part> droppedItems, List<Unit> droppedUnits,
                                            Money cashReward, boolean isIndependent, Integer targetConvoy,
-                                           StratconCoords convoyGridReference) {
+                                           StratconTrackState track, StratconCoords convoyGridReference) {
         String templateAddress = "data/scenariotemplates/Emergency Convoy Defense.xml";
 
         if (isIndependent) {
@@ -658,8 +651,6 @@ public class Resupply {
             deliverDrop(droppedItems, droppedUnits, cashReward);
             return;
         }
-
-        StratconTrackState track = getRandomTrack(contract);
 
         if (track == null) {
             campaign.addReport(String.format(resources.getString("convoyErrorTracks.text"),
@@ -919,7 +910,7 @@ public class Resupply {
      * @param part Part object whose weight is to be determined.
      * @return int representing the weight of the part.
      */
-    static int getDropWeight(Part part) {
+    private int getDropWeight(Part part) {
         int weight = 1;
 
         if (part instanceof MissingPart) {
@@ -934,9 +925,10 @@ public class Resupply {
      * parts are filtered based on their salvage status, year of availability, unit type, whether the
      * unit is extinct, and before the battle of Tukayyid Inner Sphere factions are unwilling to share
      * Clan Tech.
+     *
+     * @param  units A collection of {@code Unit} objects from which parts will be extracted.
      */
-    private void collectParts() {
-        final Collection<Unit> units = campaign.getUnits();
+    private void collectParts(Collection<Unit> units) {
         potentialParts = new HashMap<>();
 
         try {
@@ -953,7 +945,7 @@ public class Resupply {
                         if (part instanceof MekLocation) {
                             if (((MekLocation) part).getLoc() == Mek.LOC_CT) {
                                 continue;
-                            // If the unit itself is extinct, it's impossible to find replacement locations
+                                // If the unit itself is extinct, it's impossible to find replacement locations
                             } else if (unit.isExtinct(YEAR, EMPLOYER_IS_CLAN, EMPLOYER_TECH_CODE)) {
                                 continue;
                             }
@@ -994,14 +986,12 @@ public class Resupply {
      * {@code HashMap}, thus ensuring that the pool remains independent of future changes to the
      * potential parts {@code HashMap}.
      */
-    static List<Part> buildPool(Map<Part, Integer> potentialParts) {
-        List<Part> partsPool = new ArrayList<>(potentialParts.keySet());
+    private void buildPool() {
+        partsPool = new ArrayList<>(potentialParts.keySet());
 
         if (!partsPool.isEmpty()) {
             Collections.shuffle(partsPool);
         }
-
-        return partsPool;
     }
 
     /**
@@ -1093,15 +1083,7 @@ public class Resupply {
             }
         }
 
-        logger.info(droppedItems.toString());
-
-        if (contract.getContractType().isGuerrillaWarfare() && !(isLoot || isContractEnd)) {
-            if (!droppedItems.isEmpty()) {
-                smugglerOfferDialog(droppedItems);
-            }
-        } else {
-            supplyDropDialog(droppedItems, cashReward, isLoot, isContractEnd);
-        }
+        supplyDropDialog(droppedItems, cashReward, isLoot, isContractEnd);
     }
 
     /**
@@ -1112,12 +1094,12 @@ public class Resupply {
      *
      * @param droppedItems List of {@link Part} objects that were included in the supply drop. Can be
      * {@code null}.
+     * @param year The current year in the game.
+     * @param originFaction The faction associated with the supply drop.
      * @return A map containing the dropped parts and their quantities.
      */
-    public Map<String, Integer> createPartsReport(@Nullable List<Part> droppedItems) {
-        int year = campaign.getGameYear();
-        Faction originFaction = campaign.getFaction();
-
+    public Map<String, Integer> createPartsReport(@Nullable List<Part> droppedItems, int year,
+                                                  Faction originFaction) {
         return droppedItems.stream()
             .collect(Collectors.toMap(
                 part -> {
@@ -1125,7 +1107,7 @@ public class Resupply {
 
                     String append = part.isClan() ? " (Clan)" : "";
                     append = part.isMixedTech() ? " (Mixed)" : append;
-                    append += part.isExtinct(year, originFaction.isClan(), getTechFaction(originFaction)) ?
+                    append += part.isExtinct(year, originFaction.isClan(), EMPLOYER_TECH_CODE) ?
                         " (<b>Extinct</b>)" : "";
 
                     if (part instanceof AmmoBin) {
@@ -1154,18 +1136,17 @@ public class Resupply {
      *
      * @param droppedUnits List of {@link Unit} objects that were included in the supply drop. Can be
      * {@code null}.
+     * @param year The current year in the game.
+     * @param originFaction The faction associated with the supply drop.
      * @return A map containing the dropped units and their quantities.
      */
-    public Map<String, Integer> createUnitsReport(@Nullable List<Unit> droppedUnits) {
-        int year = campaign.getGameYear();
-        Faction originFaction = campaign.getFaction();
-
+    public Map<String, Integer> createUnitsReport(@Nullable List<Unit> droppedUnits, int year, Faction originFaction) {
         return droppedUnits.stream()
             .collect(Collectors.toMap(
                 unit -> {
                     String append = unit.isClan() ? " (Clan)" : "";
                     append = unit.isMixedTech() ? " (Mixed)" : append;
-                    append += unit.isExtinct(year, originFaction.isClan(), getTechFaction(originFaction)) ?
+                    append += unit.isExtinct(year, originFaction.isClan(), EMPLOYER_TECH_CODE) ?
                         " (<b>Extinct</b>)" : "";
 
                     return unit.getName() + " (" + unit.getQualityName() + ')' + append;
@@ -1233,62 +1214,6 @@ public class Resupply {
         return resources.getString(morale.toString().toLowerCase() + "Supplies"
                 + Compute.randomInt(20) + ".text");
     }
-    /**
-     * Retrieves a formatted string indended for Smuggler dialogs.
-     *
-     * @param droppedItems List of items offered by the smuggler. Can be {@code null} if
-     *                     {@code wasSwindled} is {@code true}.
-     * @param wasSwindled  Boolean indicating if the player has been swindled.
-     * @return A formatted string representing the smuggler's address to the player.
-     */
-    private String getSmugglerDescription(@Nullable List<Part> droppedItems, boolean wasSwindled) {
-        String address = resources.getString("guerrillaAddressGeneric.text");
-
-        Person commander = campaign.getFlaggedCommander();
-        if (commander != null) {
-            if (commander.getGender().isFemale()) {
-                address = resources.getString("guerrillaAddressFemale.text");
-            }
-
-            if (commander.getGender().isMale()) {
-                address = resources.getString("guerrillaAddressMale.text");
-            }
-        }
-
-        String enemyFactionReference = enemyFaction.getFullName(campaign.getGameYear());
-        if (!enemyFactionReference.contains("Clan")) {
-            enemyFactionReference = "the " + enemyFactionReference;
-        }
-
-        if (wasSwindled) {
-            return String.format(
-                resources.getString("guerrillaSwindled" + Compute.randomInt(25) + ".text"),
-                address, enemyFactionReference);
-        } else {
-            Money value = getSmugglerFee(droppedItems);
-
-            return String.format(
-                resources.getString("guerrillaSupplies" + Compute.randomInt(25) + ".text"),
-                address, enemyFactionReference, value.toAmountAndSymbolString());
-        }
-    }
-
-    /**
-     * Calculates the smuggler's fee for a list of dropped items.
-     * The fee is 2 times the total actual value of all items.
-     *
-     * @param droppedItems The list of items dropped by smuggler.
-     * @return The calculated smuggler's fee as a {@link Money} object.
-     */
-    private static Money getSmugglerFee(List<Part> droppedItems) {
-        Money value = Money.zero();
-        for (Part part : droppedItems) {
-            value = value.plus(part.getActualValue());
-        }
-
-        value = value.multipliedBy(2);
-        return value;
-    }
 
     /**
      * This method generates a randomized {@link PartQuality} entry. The randomness is adjusted by
@@ -1300,7 +1225,7 @@ public class Resupply {
      *                 part quality that's returned.
      * @return          A {@link PartQuality} object representing the quality of a part.
      */
-    static PartQuality getRandomPartQuality(int modifier) {
+    private static PartQuality getRandomPartQuality(int modifier) {
         return getRandomUnitQuality(modifier);
     }
 
