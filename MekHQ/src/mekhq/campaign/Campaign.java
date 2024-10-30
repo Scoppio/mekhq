@@ -3676,14 +3676,14 @@ public class Campaign implements ITechManager {
                                 (AtBDynamicScenario) scenario, contract.getStratconCampaignState());
 
                         if (stub) {
-                            scenario.convertToStub(this, ScenarioStatus.DEFEAT);
-                            addReport("Failure to deploy for " + scenario.getName() + " resulted in defeat.");
-
                             // I really don't like checking against a String here, but I couldn't find a way to
                             // fetch the scenario's original template
                             if (Objects.equals(scenario.getName(), "Emergency Convoy Defense")) {
-                                convoyFinalMessageDialog(this, contract.getEmployerFaction());
+                                processAbandonedConvoy(contract, (AtBDynamicScenario) scenario);
                             }
+
+                            scenario.convertToStub(this, ScenarioStatus.DEFEAT);
+                            addReport("Failure to deploy for " + scenario.getName() + " resulted in defeat.");
                         } else {
                             scenario.clearAllForcesAndPersonnel(this);
                         }
@@ -3738,6 +3738,38 @@ public class Campaign implements ITechManager {
                     } else {
                         addReport(MessageFormat.format(
                                 resources.getString("atbScenarioToday.format"), s.getName()));
+                    }
+                }
+            }
+        }
+    }
+
+    private void processAbandonedConvoy(AtBContract contract, AtBDynamicScenario scenario) {
+        convoyFinalMessageDialog(this, contract.getEmployerFaction());
+
+        if (contract.getCommandRights().isIndependent()) {
+            for (Integer forceId : scenario.getPlayerTemplateForceIDs()) {
+                Force force = getForce(forceId);
+
+                if (force != null && force.isConvoyForce()) {
+                    for (UUID unitID : force.getUnits()) {
+                        Unit unit = getUnit(unitID);
+
+                        if (unit != null) {
+                            List<Person> crew = unit.getCrew();
+
+                            for (Person crewMember : crew) {
+                                int roll = Compute.d6(2);
+
+                                PersonnelStatus status = KIA;
+                                if (roll < 5) {
+                                    status = PersonnelStatus.POW;
+                                }
+                                crewMember.changeStatus(this, currentDay, status);
+                            }
+                        }
+
+                        removeUnit(unitID);
                     }
                 }
             }
