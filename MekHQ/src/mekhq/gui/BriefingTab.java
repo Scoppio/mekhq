@@ -484,7 +484,6 @@ public final class BriefingTab extends CampaignGuiTab {
             int remainingSupportPoints = ((AtBContract) mission).getStratconCampaignState().getSupportPoints();
 
             if (remainingSupportPoints > 0) {
-                logger.info("BriefingTab.java");
                 Resupply supplyDrops = new Resupply(getCampaign(), ((AtBContract) mission), false, false);
                 supplyDrops.getResupplyParts(remainingSupportPoints, true);
             }
