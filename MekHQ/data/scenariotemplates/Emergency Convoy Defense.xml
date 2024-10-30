@@ -22,7 +22,7 @@
                 <actualDeploymentZone>-1</actualDeploymentZone>
                 <allowAeroBombs>false</allowAeroBombs>
                 <allowedUnitType>-2</allowedUnitType>
-                <arrivalTurn>3</arrivalTurn>
+                <arrivalTurn>0</arrivalTurn>
                 <canReinforceLinked>true</canReinforceLinked>
                 <contributesToBV>true</contributesToBV>
                 <contributesToMapSize>true</contributesToMapSize>
@@ -43,8 +43,6 @@
                 <objectiveLinkedForces />
                 <retreatThreshold>0</retreatThreshold>
                 <startingAltitude>0</startingAltitude>
-                <syncDeploymentType>OppositeEdge</syncDeploymentType>
-                <syncedForceName>OpFor</syncedForceName>
                 <useArtillery>false</useArtillery>
             </value>
         </entry>
@@ -53,7 +51,7 @@
             <value>
                 <actualDeploymentZone>-1</actualDeploymentZone>
                 <allowAeroBombs>false</allowAeroBombs>
-                <allowedUnitType>-2</allowedUnitType>
+                <allowedUnitType>1</allowedUnitType>
                 <arrivalTurn>0</arrivalTurn>
                 <canReinforceLinked>true</canReinforceLinked>
                 <contributesToBV>false</contributesToBV>
@@ -61,7 +59,7 @@
                 <contributesToUnitCount>false</contributesToUnitCount>
                 <deployOffboard>false</deployOffboard>
                 <deploymentZones>
-                    <deploymentZone>10</deploymentZone>
+                    <deploymentZone>0</deploymentZone>
                 </deploymentZones>
                 <destinationZone>5</destinationZone>
                 <fixedUnitCount>0</fixedUnitCount>
@@ -100,7 +98,7 @@
                 <forceMultiplier>1</forceMultiplier>
                 <forceName>Resupply Convoy</forceName>
                 <generationMethod>1</generationMethod>
-                <generationOrder>4</generationOrder>
+                <generationOrder>1</generationOrder>
                 <maxWeightClass>4</maxWeightClass>
                 <minWeightClass>1</minWeightClass>
                 <objectiveLinkedForces />

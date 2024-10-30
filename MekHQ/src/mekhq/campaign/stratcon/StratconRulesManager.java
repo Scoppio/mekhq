@@ -312,12 +312,6 @@ public class StratconRulesManager {
           }
      }
 
-    public static void finalizeBackingScenario(Campaign campaign, AtBContract contract,
-                                               @Nullable StratconTrackState track, boolean autoAssignLances,
-                                               StratconScenario scenario) {
-        finalizeBackingScenario(campaign, contract, track, autoAssignLances, scenario, false);
-    }
-
     /**
      * Finalizes the backing scenario, setting up the OpFor, scenario parameters, and other
      * necessary steps.
@@ -330,7 +324,7 @@ public class StratconRulesManager {
      */
     public static void finalizeBackingScenario(Campaign campaign, AtBContract contract,
                         @Nullable StratconTrackState track, boolean autoAssignLances,
-                        StratconScenario scenario, boolean isConvoy) {
+                        StratconScenario scenario) {
         AtBDynamicScenarioFactory.finalizeScenario(scenario.getBackingScenario(), contract, campaign);
         setScenarioParametersFromBiome(track, scenario);
         swapInPlayerUnits(scenario, campaign, Force.FORCE_NONE);
