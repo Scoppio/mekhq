@@ -149,13 +149,9 @@ public class Resupply {
     private void supplyDropDialog(@Nullable List<Part> droppedItems, @Nullable List<Unit> droppedUnits,
                                   Money cashReward, boolean isLoot, boolean isContractEnd) {
         ImageIcon icon = getFactionLogo(campaign, employerFaction.getShortName(), true);
+        icon = scaleImageIconToWidth(icon, 200);
 
-        if (isLoot || isContractEnd) {
-            icon = getFactionLogo(campaign, campaign.getFaction().getShortName(), true);
-        }
-        icon = scaleImageIconToWidth(icon, 100);
-
-        StringBuilder message = new StringBuilder(getInitialDescription(isLoot, isContractEnd));
+        StringBuilder message = new StringBuilder(getInitialDepotMessage(isLoot, isContractEnd));
 
         Map<String, Integer> partsReport = new HashMap<>();
         if (droppedItems != null) {
@@ -210,31 +206,23 @@ public class Resupply {
         }
 
         message.append("<table><tr valign='top'>")
+        message.append("<table><tr valign='top'>")
             .append("<td>").append(columns[0]).append("</td>")
             .append("<td>").append(columns[1]).append("</td>")
             .append("<td>").append(columns[2]).append("</td>")
             .append("</tr></table>");
 
-        createResupplyDialog(icon, message.toString(), droppedItems, droppedUnits, cashReward,
-            isLoot || isContractEnd, false);
+        JDialog dialog = createResupplyDialog(icon, message.toString(), droppedItems, droppedUnits,
+            cashReward, isLoot || isContractEnd);
+
+        dialog.setModal(true);
+        dialog.pack();
+        dialog.setVisible(true);
     }
 
-    /**
-     * Creates a resupply dialog window with the specified parameters.
-     *
-     * @param icon            The icon to be displayed in the dialog.
-     * @param message         The message to be displayed in the dialog.
-     * @param droppedItems    List of items to be dropped. Can be null.
-     * @param droppedUnits    List of units to be dropped. Can be null.
-     * @param cashReward      The value of the cash reward.
-     * @param isLootOrContractEnd {@link Boolean} value representing if the dialog is being created
-     *                        as the result of either loot or contract end.
-     * @param isSmuggler      {@link Boolean} value representing if the dialog is an offer from a
-     *                        smuggler.
-     */
-    public void createResupplyDialog(ImageIcon icon, String message, @Nullable List<Part> droppedItems,
+    public JDialog createResupplyDialog(ImageIcon icon, String message, @Nullable List<Part> droppedItems,
                                         @Nullable List<Unit> droppedUnits, Money cashReward,
-                                        boolean isLootOrContractEnd, boolean isSmuggler) {
+                                        boolean isLootOrContractEnd) {
         final int DIALOG_WIDTH = 700;
         final int DIALOG_HEIGHT = 500;
         final String title = resources.getString("dialog.title");
@@ -272,7 +260,11 @@ public class Resupply {
         panel.add(labelIcon);
 
         JLabel description = new JLabel(
+        JLabel description = new JLabel(
             String.format("<html><div style='width: %s; text-align:center;'>%s</div></html>",
+                UIUtil.scaleForGUI(DIALOG_WIDTH), message));
+        description.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(description);
                 UIUtil.scaleForGUI(DIALOG_WIDTH), message));
         description.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(description);
@@ -452,13 +444,11 @@ public class Resupply {
                                     String convoyStatusMessage, boolean isIntercepted,
                                     boolean isIntroduction) {
         boolean isIndependent = contract.getCommandRights().isIndependent();
-        StratconTrackState track = getRandomTrack(contract);
 
-        StratconCoords convoyGridReference;
-        if (track != null) {
-            convoyGridReference = getUnoccupiedCoords(track);
-        } else {
-            convoyGridReference = null;
+        Integer targetConvoy = null;
+
+        if (isIndependent) {
+            targetConvoy = getRandomConvoy();
         }
 
         // Dialog dimensions and representative
@@ -480,82 +470,8 @@ public class Resupply {
                     convoyStatusMessage, isIntercepted, false);
             } else {
                 if (isIntercepted) {
-                    boolean isIndependent = contract.getCommandRights().isIndependent();
-
                     if (campaign.getCampaignOptions().isUseStratCon()) {
-                        String templateAddress = "data/scenariotemplates/Emergency Convoy Defense.xml";
-
-                        if (isIndependent) {
-                            templateAddress = "data/scenariotemplates/Emergency Convoy Defense - Independent.xml";
-                        }
-                        ScenarioTemplate template = ScenarioTemplate.Deserialize(templateAddress);
-
-                        if (template == null) {
-                            campaign.addReport(String.format(resources.getString("convoyErrorTemplate.text"),
-                                spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
-                                templateAddress, CLOSING_SPAN_TAG));
-                            deliverDrop(droppedItems, droppedUnits, cashReward);
-                            return;
-                        }
-
-                        StratconTrackState track = getRandomTrack(contract);
-
-                        if (track == null) {
-                            campaign.addReport(String.format(resources.getString("convoyErrorTracks.text"),
-                                spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
-                                templateAddress, CLOSING_SPAN_TAG));
-                            deliverDrop(droppedItems, droppedUnits, cashReward);
-                            return;
-                        }
-                        StratconScenario scenario = generateExternalScenario(campaign, contract, track, template);
-
-                        // If we successfully generated a scenario, we need to make a couple of final
-                        // adjustments so that the player can still get their items (if they succeed)
-                        if (scenario != null) {
-                            AtBDynamicScenario backingScenario = scenario.getBackingScenario();
-                            backingScenario.setDate(campaign.getLocalDate());
-
-                            for (int id : backingScenario.getPlayerTemplateForceIDs()) {
-                                //backingScenario.removeForce(id);
-                            }
-
-                            int randomConvoyId = getRandomConvoy();
-                            backingScenario.addForce(randomConvoyId, "Player");
-                            campaign.getForce(randomConvoyId).setScenarioId(backingScenario.getId(), campaign);
-                            scenario.commitPrimaryForces();
-
-                            Loot loot = new Loot();
-
-                            if (droppedItems != null) {
-                                for (Part part : droppedItems) {
-                                    loot.addPart(part);
-                                }
-                            }
-
-                            if (droppedUnits != null) {
-                                for (Unit unit : droppedUnits) {
-                                    loot.addUnit(unit.getEntity());
-                                }
-                            }
-
-                            if (!cashReward.isZero()) {
-                                loot.setCash(cashReward);
-                            }
-
-                            backingScenario.addLoot(loot);
-
-                            // Announce the situation to the player
-                            campaign.addReport(String.format(resources.getString("convoyInterceptedStratCon.text"),
-                                spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
-                                CLOSING_SPAN_TAG));
-                        } else {
-                            // If we failed to generate a scenario, for whatever reason, we don't
-                            // want the player confused why there isn't a scenario, so we offer
-                            // this fluffy response.
-                            campaign.addReport(String.format(resources.getString("convoyDestroyed.text"),
-                                spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
-                                CLOSING_SPAN_TAG));
-                        }
+                        processIndependentConvoyInterception(droppedItems, droppedUnits, cashReward, isIndependent);
                     } else {
                         campaign.addReport(String.format(resources.getString("convoyInterceptedAtB.text"),
                             spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
@@ -583,7 +499,29 @@ public class Resupply {
         iconLabel.setHorizontalAlignment(JLabel.CENTER);
 
         Person logisticsOfficer = pickLogisticsRepresentative();
-        ImageIcon speakerIcon = getSpeakerIcon(targetConvoy, isIntroduction, logisticsOfficer);
+        ImageIcon speakerIcon = null;
+        if (isIntroduction) {
+            if (logisticsOfficer == null) {
+                speakerIcon = Factions.getFactionLogo(campaign, campaign.getFaction().getShortName(),
+                    true);
+            } else {
+                speakerIcon = logisticsOfficer.getPortrait().getImageIcon();
+            }
+        } else {
+            if (contract.getCommandRights().isIndependent()) {
+                speakerIcon = getIndependentIconLabel(targetConvoy);
+            }
+
+            if (speakerIcon == null) {
+                if (contract.getCommandRights().isIndependent()) {
+                    speakerIcon = Factions.getFactionLogo(campaign, campaign.getFaction().getShortName(),
+                        true);
+                } else {
+                    speakerIcon = Factions.getFactionLogo(campaign, employerFaction.getShortName(),
+                        true);
+                }
+            }
+        }
         speakerIcon = scaleImageIconToWidth(speakerIcon, UIUtil.scaleForGUI(100));
         iconLabel.setIcon(speakerIcon);
         dialog.add(iconLabel, BorderLayout.NORTH);
@@ -594,7 +532,6 @@ public class Resupply {
         if (isIntroduction) {
             message = String.format(resources.getString("logisticsMessage.text"),
                 getCommanderTitle(campaign, false)) + "<br>";
-                getCommanderTitle(campaign, false)) + "<br>";
 
             if (logisticsOfficer != null) {
                 speaker = logisticsOfficer.getFullTitle();
@@ -604,6 +541,20 @@ public class Resupply {
             }
         } else {
             message = String.format(message, getCommanderTitle(campaign, false));
+
+            if (contract.getCommandRights().isIndependent()) {
+                if (targetConvoy != null) {
+                    speaker = getConvoySpeaker(targetConvoy, speaker);
+                }
+
+                if (speaker == null) {
+                    speaker = String.format(resources.getString("dialogBorderConvoySpeakerDefault.text"),
+                        campaign.getName());
+                }
+            } else {
+                speaker = String.format(resources.getString("dialogBorderConvoySpeakerDefault.text"),
+                    contract.getEmployer());
+            }
         }
 
         JLabel description = new JLabel(
@@ -635,6 +586,139 @@ public class Resupply {
         dialog.setModal(true);
         dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
+    }
+
+    private static ImageIcon scaleImageIconToWidth(ImageIcon icon, int width) {
+        int height = (int) Math.ceil((double) width * icon.getIconHeight() / icon.getIconWidth());
+        Image image = icon.getImage();
+        Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledImage);
+    }
+
+    private String getConvoySpeaker(Integer targetConvoy, String speaker) {
+        Force convoy = campaign.getForce(targetConvoy);
+
+        if (convoy != null) {
+            UUID convoyCommanderId = convoy.getForceCommanderID();
+
+            if (convoyCommanderId != null) {
+                Person convoyCommander = campaign.getPerson(convoyCommanderId);
+
+                if (convoyCommander != null) {
+                    speaker = convoyCommander.getFullTitle();
+                }
+            }
+        }
+
+        if (convoy != null) {
+            speaker = speaker + ", " + convoy.getName();
+        } else {
+            speaker = String.format(resources.getString("dialogBorderConvoySpeakerDefault.text"),
+                campaign.getName());
+        }
+        return speaker;
+    }
+
+    @Nullable
+    private ImageIcon getIndependentIconLabel(Integer targetConvoy) {
+        if (targetConvoy != null) {
+            Force convoy = campaign.getForce(targetConvoy);
+
+            if (convoy != null) {
+                UUID convoyCommanderId = convoy.getForceCommanderID();
+
+                if (convoyCommanderId != null) {
+                    Person convoyCommander = campaign.getPerson(convoyCommanderId);
+
+                    if (convoyCommander != null) {
+                        return convoyCommander.getPortrait().getImageIcon();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private void processIndependentConvoyInterception(List<Part> droppedItems, List<Unit> droppedUnits, Money cashReward, boolean isIndependent) {
+        String templateAddress = "data/scenariotemplates/Emergency Convoy Defense.xml";
+
+        if (isIndependent) {
+            templateAddress = "data/scenariotemplates/Emergency Convoy Defense - Independent.xml";
+        }
+        ScenarioTemplate template = ScenarioTemplate.Deserialize(templateAddress);
+
+        if (template == null) {
+            campaign.addReport(String.format(resources.getString("convoyErrorTemplate.text"),
+                spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
+                templateAddress, CLOSING_SPAN_TAG));
+            deliverDrop(droppedItems, droppedUnits, cashReward);
+            return;
+        }
+
+        StratconTrackState track = getRandomTrack(contract);
+
+        if (track == null) {
+            campaign.addReport(String.format(resources.getString("convoyErrorTracks.text"),
+                spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
+                templateAddress, CLOSING_SPAN_TAG));
+            deliverDrop(droppedItems, droppedUnits, cashReward);
+            return;
+        }
+        StratconScenario scenario = generateExternalScenario(campaign, contract, track, template);
+
+        // If we successfully generated a scenario, we need to make a couple of final
+        // adjustments, including assigning the Resupply contents as loot and
+        // assigning a player convoy (if appropriate)
+        if (scenario != null) {
+            AtBDynamicScenario backingScenario = scenario.getBackingScenario();
+            backingScenario.setDate(campaign.getLocalDate());
+
+            Integer randomConvoyId = getRandomConvoy();
+
+            if (randomConvoyId == null) {
+                campaign.addReport(String.format(resources.getString("convoyErrorPlayerConvoy.text"),
+                    spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
+                    templateAddress, CLOSING_SPAN_TAG));
+                deliverDrop(droppedItems, droppedUnits, cashReward);
+                return;
+            }
+
+            backingScenario.addForce(randomConvoyId, "Player");
+            campaign.getForce(randomConvoyId).setScenarioId(backingScenario.getId(), campaign);
+            scenario.commitPrimaryForces();
+
+            Loot loot = new Loot();
+
+            if (droppedItems != null) {
+                for (Part part : droppedItems) {
+                    loot.addPart(part);
+                }
+            }
+
+            if (droppedUnits != null) {
+                for (Unit unit : droppedUnits) {
+                    loot.addUnit(unit.getEntity());
+                }
+            }
+
+            if (!cashReward.isZero()) {
+                loot.setCash(cashReward);
+            }
+
+            backingScenario.addLoot(loot);
+
+            // Announce the situation to the player
+            campaign.addReport(String.format(resources.getString("convoyInterceptedStratCon.text"),
+                spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
+                CLOSING_SPAN_TAG));
+        } else {
+            // If we failed to generate a scenario, for whatever reason, we don't
+            // want the player confused why there isn't a scenario, so we offer
+            // this fluffy response.
+            campaign.addReport(String.format(resources.getString("convoyDestroyed.text"),
+                spanOpeningWithCustomColor(MekHQ.getMHQOptions().getFontColorNegativeHexColor()),
+                CLOSING_SPAN_TAG));
+        }
     }
 
     @Nullable
@@ -1110,7 +1194,7 @@ public class Resupply {
      * @return               A {@link String} message picked from the resources, based on the given
      * input parameters.
      */
-    private String getInitialDescription(boolean isLoot, boolean isContractEnd) {
+    private String getInitialDepotMessage(boolean isLoot, boolean isContractEnd) {
         if (isLoot) {
             return resources.getString("salvaged" + Compute.randomInt(10) + ".text");
         }
