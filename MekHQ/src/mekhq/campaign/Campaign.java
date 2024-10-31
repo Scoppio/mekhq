@@ -21,6 +21,8 @@
  */
 package mekhq.campaign;
 
+import megamek.client.bot.princess.BehaviorSettings;
+import megamek.client.bot.princess.BehaviorSettingsFactory;
 import megamek.client.generator.RandomGenderGenerator;
 import megamek.client.generator.RandomNameGenerator;
 import megamek.client.generator.RandomUnitGenerator;
@@ -270,6 +272,7 @@ public class Campaign implements ITechManager {
     private StoryArc storyArc;
     private FameAndInfamyController fameAndInfamy;
     private List<Unit> automatedMothballUnits;
+    private BehaviorSettings autoResolveBehaviorSettings;
 
     private final transient ResourceBundle resources = ResourceBundle.getBundle("mekhq.resources.Campaign",
             MekHQ.getMHQOptions().getLocale());
@@ -338,6 +341,7 @@ public class Campaign implements ITechManager {
         fieldKitchenWithinCapacity = false;
         fameAndInfamy = new FameAndInfamyController();
         automatedMothballUnits = new ArrayList<>();
+        autoResolveBehaviorSettings = BehaviorSettingsFactory.getInstance().DEFAULT_BEHAVIOR;
     }
 
     /**
@@ -5508,6 +5512,7 @@ public class Campaign implements ITechManager {
             MHQXMLUtility.writeSimpleXMLTag(pw, indent, "shipSearchType", shipSearchType);
             MHQXMLUtility.writeSimpleXMLTag(pw, indent, "shipSearchResult", shipSearchResult);
             MHQXMLUtility.writeSimpleXMLTag(pw, indent, "shipSearchExpiration", getShipSearchExpiration());
+            MHQXMLUtility.writeSimpleXMLTag(pw, indent, "autoResolveBehaviorSettings", autoResolveBehaviorSettings.getDescription());
         }
 
         retirementDefectionTracker.writeToXML(pw, indent);
@@ -8421,6 +8426,14 @@ public class Campaign implements ITechManager {
         }
 
         return commanderRank;
+    }
+
+    public BehaviorSettings getAutoResolveBehaviorSettings() {
+        return autoResolveBehaviorSettings;
+    }
+
+    public void setAutoResolveBehaviorSettings(BehaviorSettings settings) {
+        autoResolveBehaviorSettings = settings;
     }
 
 }
