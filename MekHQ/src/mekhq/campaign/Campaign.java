@@ -3873,7 +3873,6 @@ public class Campaign implements ITechManager {
                 addReport(report);
 
                 // Resupply
-                logger.info("Campaign.java");
                 if (getLocation().isOnPlanet() && getLocation().getCurrentSystem().equals(contract.getSystem())) {
                     processResupply(contract);
                 }
