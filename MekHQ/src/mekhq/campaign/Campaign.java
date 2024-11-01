@@ -21,6 +21,8 @@
  */
 package mekhq.campaign;
 
+import megamek.client.bot.princess.BehaviorSettings;
+import megamek.client.bot.princess.BehaviorSettingsFactory;
 import megamek.client.generator.RandomGenderGenerator;
 import megamek.client.generator.RandomNameGenerator;
 import megamek.client.generator.RandomUnitGenerator;
@@ -3738,45 +3740,6 @@ public class Campaign implements ITechManager {
                     } else {
                         addReport(MessageFormat.format(
                                 resources.getString("atbScenarioToday.format"), s.getName()));
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Processes an abandoned convoy. The player is presented with a defeat dialog,
-     * and if they have independent command rights, it checks each player template force in the scenario
-     * for being a convoy force. If it is a convoy force, its units are treated as abandoned units.
-     * Each crew member of these units is set as either KIA or POW based on a die roll.
-     * It finally removes each unit from the campaign.
-     *
-     * @param contract The current {@link AtBContract}.
-     * @param scenario The relevant {@link AtBDynamicScenario}.
-     */
-    private void processAbandonedConvoy(AtBContract contract, AtBDynamicScenario scenario) {
-        convoyFinalMessageDialog(this, contract.getEmployerFaction());
-
-        if (contract.getCommandRights().isIndependent()) {
-            for (Integer forceId : scenario.getPlayerTemplateForceIDs()) {
-                Force force = getForce(forceId);
-
-                if (force != null && force.isConvoyForce()) {
-                    for (UUID unitID : new ArrayList<>(force.getUnits())) {
-                        Unit unit = getUnit(unitID);
-                        if (unit != null) {
-                            List<Person> crew = new ArrayList<>(unit.getCrew());
-                            for (Person crewMember : crew) {
-                                PersonnelStatus status = KIA;
-                                // We're using the CamOps rules for infantry survival here and
-                                // assuming anyone who isn't dead has been captured.
-                                if (Compute.d6(2) > 7) {
-                                    status = PersonnelStatus.POW;
-                                }
-                                crewMember.changeStatus(this, currentDay, status);
-                            }
-                        }
-                        removeUnit(unitID);
                     }
                 }
             }

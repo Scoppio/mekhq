@@ -20,7 +20,7 @@
  * along with MekHQ. If not, see <http://www.gnu.org/licenses/>.
  */
 
- package mekhq.gui.dialog;
+package mekhq.gui.dialog;
 
 import megamek.client.ui.Messages;
 import megamek.client.ui.dialogs.EntityReadoutDialog;
@@ -78,8 +78,8 @@ public class ResolveScenarioWizardDialog extends JDialog {
     final static String PREVIEWPANEL = "Preview";
 
     final static String[] panelOrder = {
-            UNITSPANEL, PILOTPANEL, SALVAGEPANEL, PRISONERPANEL, KILLSPANEL, REWARDPANEL,
-            OBJECTIVEPANEL, PREVIEWPANEL
+        UNITSPANEL, PILOTPANEL, SALVAGEPANEL, PRISONERPANEL, KILLSPANEL, REWARDPANEL,
+        OBJECTIVEPANEL, PREVIEWPANEL
     };
 
     private Campaign campaign;
@@ -178,7 +178,7 @@ public class ResolveScenarioWizardDialog extends JDialog {
     private static final MMLogger logger = MMLogger.create(ResolveScenarioWizardDialog.class);
 
     private final transient ResourceBundle resourceMap =
-            ResourceBundle.getBundle("mekhq.resources.ResolveScenarioWizardDialog", MekHQ.getMHQOptions().getLocale());
+        ResourceBundle.getBundle("mekhq.resources.ResolveScenarioWizardDialog", MekHQ.getMHQOptions().getLocale());
     //endregion Variable Declarations
 
     public ResolveScenarioWizardDialog(Campaign campaign, JFrame parent, boolean modal, ResolveScenarioTracker t) {
@@ -197,7 +197,7 @@ public class ResolveScenarioWizardDialog extends JDialog {
             currentSalvagePct = 0;
             if (salvageUnit.plus(salvageEmployer).isPositive()) {
                 currentSalvagePct = salvageUnit.multipliedBy(100)
-                        .dividedBy(salvageUnit.plus(salvageEmployer)).getAmount().intValue();
+                    .dividedBy(salvageUnit.plus(salvageEmployer)).getAmount().intValue();
             }
         }
         initComponents();
@@ -218,8 +218,8 @@ public class ResolveScenarioWizardDialog extends JDialog {
 
         // Adding Escape Mnemonic
         getRootPane().registerKeyboardAction(e -> dispose(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                JComponent.WHEN_IN_FOCUSED_WINDOW);
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
 
         setName("Form");
 
@@ -232,38 +232,38 @@ public class ResolveScenarioWizardDialog extends JDialog {
         //region Make Tab Panels
         pnlUnitStatus = makeUnitStatusPanel();
         tabMain.add(wrapWithInstructions(pnlUnitStatus, null,
-                resourceMap.getString("txtInstructions.text.missingunits")), UNITSPANEL);
+            resourceMap.getString("txtInstructions.text.missingunits")), UNITSPANEL);
 
 
         pnlPilotStatus = makePilotStatusPanel();
         tabMain.add(wrapWithInstructions(pnlPilotStatus, null,
-                resourceMap.getString("txtInstructions.text.personnel")), PILOTPANEL);
+            resourceMap.getString("txtInstructions.text.personnel")), PILOTPANEL);
 
 
         pnlSalvage = makeSalvagePanel();
         tabMain.add(wrapWithInstructions(pnlSalvage, null,
-                resourceMap.getString("txtInstructions.text.salvage")), SALVAGEPANEL);
+            resourceMap.getString("txtInstructions.text.salvage")), SALVAGEPANEL);
 
         pnlPrisonerStatus = makePrisonerStatusPanel();
         tabMain.add(wrapWithInstructions(pnlPrisonerStatus, null,
-                resourceMap.getString("txtInstructions.text.prisoners")), PRISONERPANEL);
+            resourceMap.getString("txtInstructions.text.prisoners")), PRISONERPANEL);
 
         pnlKills = makeKillsPanel();
         tabMain.add(wrapWithInstructions(pnlKills, null,
-                resourceMap.getString("txtInstructions.text.kills")), KILLSPANEL);
+            resourceMap.getString("txtInstructions.text.kills")), KILLSPANEL);
 
         pnlRewards = makeRewardsPanel();
         tabMain.add(wrapWithInstructions(pnlRewards, null,
-                resourceMap.getString("txtInstructions.text.reward")), REWARDPANEL);
+            resourceMap.getString("txtInstructions.text.reward")), REWARDPANEL);
 
         pnlObjectiveStatus = makeObjectiveStatusPanel();
         tabMain.add(wrapWithInstructions(pnlObjectiveStatus, null,
-                resourceMap.getString("txtInstructions.text.objectives")), OBJECTIVEPANEL);
+            resourceMap.getString("txtInstructions.text.objectives")), OBJECTIVEPANEL);
 
         pnlPreview = makePreviewPanel();
         scrPreviewPanel = new JScrollPaneWithSpeed();
         tabMain.add(wrapWithInstructions(pnlPreview, scrPreviewPanel,
-                resourceMap.getString("txtInstructions.text.preview")), PREVIEWPANEL);
+            resourceMap.getString("txtInstructions.text.preview")), PREVIEWPANEL);
 
 
         gridBagConstraints = new GridBagConstraints();
@@ -785,7 +785,7 @@ public class ResolveScenarioWizardDialog extends JDialog {
             if ((status.getHits() > 5) || status.isDead()) {
                 kiaCheck.setSelected(true);
             } else if (status.isCaptured()
-                    && tracker.getCampaign().getCampaignOptions().getPrisonerCaptureStyle().isAtB()) {
+                && tracker.getCampaign().getCampaignOptions().getPrisonerCaptureStyle().isAtB()) {
                 boolean wasCaptured;
                 if (status.wasPickedUp()) {
                     wasCaptured = true;
@@ -1065,7 +1065,7 @@ public class ResolveScenarioWizardDialog extends JDialog {
 
         // dynamically update victory/defeat dropdown based on objective checkboxes
         ScenarioStatus scenarioStatus = objectiveProcessor.determineScenarioStatus(tracker.getScenario(),
-                getObjectiveOverridesStatus(), getObjectiveUnitCounts());
+            getObjectiveOverridesStatus(), getObjectiveUnitCounts());
         choiceStatus.setSelectedItem(scenarioStatus);
 
         pnlStatus.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
@@ -1087,8 +1087,8 @@ public class ResolveScenarioWizardDialog extends JDialog {
         txtRewards.setLineWrap(true);
         txtRewards.setWrapStyleWord(true);
         txtRewards.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(resourceMap.getString("txtRewards.title")),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            BorderFactory.createTitledBorder(resourceMap.getString("txtRewards.title")),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -1120,8 +1120,8 @@ public class ResolveScenarioWizardDialog extends JDialog {
         txtRecoveredUnits.setLineWrap(true);
         txtRecoveredUnits.setWrapStyleWord(true);
         txtRecoveredUnits.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(resourceMap.getString("txtRecoveredUnits.title")),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            BorderFactory.createTitledBorder(resourceMap.getString("txtRecoveredUnits.title")),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -1139,8 +1139,8 @@ public class ResolveScenarioWizardDialog extends JDialog {
         txtRecoveredPilots.setLineWrap(true);
         txtRecoveredPilots.setWrapStyleWord(true);
         txtRecoveredPilots.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(resourceMap.getString("txtRecoveredPilots.title")),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            BorderFactory.createTitledBorder(resourceMap.getString("txtRecoveredPilots.title")),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -1158,8 +1158,8 @@ public class ResolveScenarioWizardDialog extends JDialog {
         txtMissingUnits.setLineWrap(true);
         txtMissingUnits.setWrapStyleWord(true);
         txtMissingUnits.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(resourceMap.getString("txtMissingUnits.title")),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            BorderFactory.createTitledBorder(resourceMap.getString("txtMissingUnits.title")),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -1177,8 +1177,8 @@ public class ResolveScenarioWizardDialog extends JDialog {
         txtMissingPilots.setLineWrap(true);
         txtMissingPilots.setWrapStyleWord(true);
         txtMissingPilots.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(resourceMap.getString("txtMissingPilots.title")),
-                BorderFactory.createEmptyBorder(5,5,5,5)));
+            BorderFactory.createTitledBorder(resourceMap.getString("txtMissingPilots.title")),
+            BorderFactory.createEmptyBorder(5,5,5,5)));
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
@@ -1196,8 +1196,8 @@ public class ResolveScenarioWizardDialog extends JDialog {
         txtSalvage.setLineWrap(true);
         txtSalvage.setWrapStyleWord(true);
         txtSalvage.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(resourceMap.getString("txtSalvagedUnits.title")),
-                BorderFactory.createEmptyBorder(5,5,5,5)));
+            BorderFactory.createTitledBorder(resourceMap.getString("txtSalvagedUnits.title")),
+            BorderFactory.createEmptyBorder(5,5,5,5)));
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 3;
@@ -1215,8 +1215,8 @@ public class ResolveScenarioWizardDialog extends JDialog {
         txtDeadPilots.setLineWrap(true);
         txtDeadPilots.setWrapStyleWord(true);
         txtDeadPilots.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(resourceMap.getString("txtDeadPilots.title")),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            BorderFactory.createTitledBorder(resourceMap.getString("txtDeadPilots.title")),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
@@ -1257,8 +1257,8 @@ public class ResolveScenarioWizardDialog extends JDialog {
         instructions.setLineWrap(true);
         instructions.setWrapStyleWord(true);
         instructions.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(resourceMap.getString("txtInstructions.title")),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            BorderFactory.createTitledBorder(resourceMap.getString("txtInstructions.title")),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 
         JPanel container = new JPanel(new GridBagLayout());
@@ -1296,7 +1296,7 @@ public class ResolveScenarioWizardDialog extends JDialog {
         for (JCheckBox box : chksTotaled) {
             UUID id = UUID.fromString(box.getActionCommand());
             objectiveProcessor.updateObjectiveEntityState(tracker.getAllInvolvedUnits().get(id),
-                    false, box.isSelected(), !tracker.playerHasBattlefieldControl());
+                false, box.isSelected(), !tracker.playerHasBattlefieldControl());
         }
     }
 
@@ -1308,7 +1308,7 @@ public class ResolveScenarioWizardDialog extends JDialog {
         for (JCheckBox box : escapeBoxes) {
             UUID id = UUID.fromString(box.getActionCommand());
             objectiveProcessor.updateObjectiveEntityState(tracker.getAllInvolvedUnits().get(id),
-                    box.isSelected(), false, tracker.playerHasBattlefieldControl());
+                box.isSelected(), false, tracker.playerHasBattlefieldControl());
         }
     }
 
@@ -1320,7 +1320,7 @@ public class ResolveScenarioWizardDialog extends JDialog {
         for (ScenarioObjective objective : objectiveCheckboxes.keySet()) {
             for (JCheckBox checkBox : objectiveCheckboxes.get(objective)) {
                 checkBox.setSelected(objectiveProcessor.getQualifyingObjectiveUnits()
-                        .get(objective).contains(checkBox.getActionCommand()));
+                    .get(objective).contains(checkBox.getActionCommand()));
             }
         }
     }
@@ -1331,7 +1331,7 @@ public class ResolveScenarioWizardDialog extends JDialog {
     private void updatePreviewPanel() {
         // set victory/defeat status based on scenario objectives
         ScenarioStatus scenarioStatus = objectiveProcessor.determineScenarioStatus(tracker.getScenario(),
-                getObjectiveOverridesStatus(), getObjectiveUnitCounts());
+            getObjectiveOverridesStatus(), getObjectiveUnitCounts());
         choiceStatus.setSelectedItem(scenarioStatus);
 
         // do a "dry run" of the scenario objectives to output a report
@@ -1533,10 +1533,10 @@ public class ResolveScenarioWizardDialog extends JDialog {
         // now DropShip bonuses (if any)
         if (tracker.getDropShipBonus().isPositive()) {
             tracker.getCampaign().getFinances().credit(
-                    TransactionType.MISCELLANEOUS,
-                    tracker.getCampaign().getLocalDate(),
-                    tracker.getDropShipBonus(),
-                    resourceMap.getString("dropShipBonus.text")
+                TransactionType.MISCELLANEOUS,
+                tracker.getCampaign().getLocalDate(),
+                tracker.getDropShipBonus(),
+                resourceMap.getString("dropShipBonus.text")
             );
         }
 
@@ -1612,8 +1612,8 @@ public class ResolveScenarioWizardDialog extends JDialog {
                 case PILOTPANEL -> !tracker.getPeopleStatus().keySet().isEmpty();
                 case PRISONERPANEL -> !tracker.getOppositionPersonnel().keySet().isEmpty();
                 case SALVAGEPANEL -> !tracker.getPotentialSalvage().isEmpty()
-                        && (!(tracker.getMission() instanceof Contract)
-                        || ((Contract) tracker.getMission()).canSalvage());
+                    && (!(tracker.getMission() instanceof Contract)
+                    || ((Contract) tracker.getMission()).canSalvage());
                 case KILLSPANEL -> !tracker.getKillCredits().isEmpty();
                 case REWARDPANEL -> !loots.isEmpty();
                 case PREVIEWPANEL -> true;
@@ -1758,7 +1758,7 @@ public class ResolveScenarioWizardDialog extends JDialog {
         currentSalvagePct = 0;
         if (salvageUnit.plus(salvageEmployer).isPositive()) {
             currentSalvagePct = salvageUnit.multipliedBy(100)
-                    .dividedBy(salvageUnit.plus(salvageEmployer)).getAmount().intValue();
+                .dividedBy(salvageUnit.plus(salvageEmployer)).getAmount().intValue();
         }
 
         for (int i = 0; i < salvageBoxes.size(); i++) {
@@ -1787,98 +1787,12 @@ public class ResolveScenarioWizardDialog extends JDialog {
     }
 
 
-<<<<<<< HEAD
     /**
      * Shows the info for the given unit in a dialog.
      * @param id - UUID of the unit to show
      * @param isSalvage - is this from the salvage page?
      */
     private void showUnit(UUID id, boolean isSalvage) {
-=======
-        // do a "dry run" of the scenario objectives to output a report
-        StringBuilder sb = new StringBuilder();
-
-        if (tracker.getScenario().hasObjectives()) {
-            for (ScenarioObjective objective : tracker.getScenario().getScenarioObjectives()) {
-                int qualifyingUnitCount = 0;
-
-                if (objectiveCheckboxes.containsKey(objective)) {
-                    for (JCheckBox box : objectiveCheckboxes.get(objective)) {
-                        if (box.isSelected()) {
-                            qualifyingUnitCount++;
-                        }
-                    }
-                }
-
-                Boolean override = null;
-                if (objectiveOverrideCheckboxes.containsKey(objective)) {
-                    override = objectiveOverrideCheckboxes.get(objective).isSelected();
-                }
-
-                sb.append(objectiveProcessor.processObjective(campaign, objective, qualifyingUnitCount, override, tracker, true));
-                sb.append('\n');
-            }
-
-            txtReport.setText(sb.toString());
-        }
-
-        //pilots first
-        StringBuilder missingNames = new StringBuilder();
-        StringBuilder kiaNames = new StringBuilder();
-        StringBuilder recoverNames = new StringBuilder();
-        for (int i = 0; i < pstatuses.size(); i++) {
-            PersonStatus status = pstatuses.get(i);
-            if (hitSliders.get(i).getValue() >= 6 || kiaBtns.get(i).isSelected()) {
-                kiaNames.append(status.getName()).append('\n');
-            } else if (miaBtns.get(i).isSelected()) {
-                missingNames.append(status.getName()).append('\n');
-            } else {
-                recoverNames.append(status.getName()).append('\n');
-            }
-        }
-        txtRecoveredPilots.setText(recoverNames.toString());
-        txtMissingPilots.setText(missingNames.toString());
-        txtDeadPilots.setText(kiaNames.toString());
-
-        //now units
-        StringBuilder recoverUnits = new StringBuilder();
-        StringBuilder missUnits = new StringBuilder();
-        for (int i = 0; i < chksTotaled.size(); i++) {
-            String name = ustatuses.get(i).getName();
-            if (chksTotaled.get(i).isSelected()) {
-                missUnits.append(name).append('\n');
-            } else {
-                recoverUnits.append(name).append('\n');
-            }
-        }
-        txtRecoveredUnits.setText(recoverUnits.toString());
-        txtMissingUnits.setText(missUnits.toString());
-
-        //now salvage
-        StringBuilder salvageUnits = new StringBuilder();
-        for (int i = 0; i < salvageBoxes.size(); i++) {
-            JCheckBox box = salvageBoxes.get(i);
-            if (box.isSelected()) {
-                salvageUnits.append(salvageables.get(i).getName()).append('\n');
-            }
-        }
-        txtSalvage.setText(salvageUnits.toString());
-
-        //now rewards
-        StringBuilder claimed = new StringBuilder();
-        for (int i = 0; i < lootBoxes.size(); i++) {
-            JCheckBox box = lootBoxes.get(i);
-            if (box.isSelected()) {
-                claimed.append(loots.get(i).getShortDescription()).append('\n');
-            }
-        }
-        txtRewards.setText(claimed.toString());
-    }
-
-    private void showUnit(UUID id, boolean salvage) {
-        // TODO : I am not sure I like the pop up dialog, might just make this a view on this
-        // TODO : dialog
->>>>>>> 8ee73cd508 (Remove bonus parts feature)
         UnitStatus ustatus;
         if (isSalvage) {
             ustatus = tracker.getSalvageStatus().get(id);
@@ -1929,15 +1843,15 @@ public class ResolveScenarioWizardDialog extends JDialog {
         }
 
         Person person = isPrisoner ? ((OppositionPersonnelStatus) status).getPerson()
-                : tracker.getCampaign().getPerson(status.getId());
+            : tracker.getCampaign().getPerson(status.getId());
         if (person == null) {
             logger.error("Failed to show person after selecting view personnel for a "
-                    + (isPrisoner ? "Prisoner" : "member of the force") +
-                    " because the person could not be found.");
+                + (isPrisoner ? "Prisoner" : "member of the force") +
+                " because the person could not be found.");
             return;
         }
         PersonViewPanel personViewPanel = new PersonViewPanel(person, tracker.getCampaign(),
-                tracker.getCampaign().getApp().getCampaigngui());
+            tracker.getCampaign().getApp().getCampaigngui());
         final JDialog dialog = new JDialog(frame, isPrisoner ? "Prisoner View" : "Personnel View", true);
         dialog.getContentPane().setLayout(new GridBagLayout());
 
@@ -1986,7 +1900,7 @@ public class ResolveScenarioWizardDialog extends JDialog {
         }
 
         label.setForeground(objectiveProcessor.objectiveMet(objective, qualifyingUnitCount)
-                ? Color.green.darker() : Color.RED);
+            ? Color.green.darker() : Color.RED);
     }
 
     private class CheckTotalListener implements ItemListener {
