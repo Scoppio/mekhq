@@ -22,9 +22,10 @@
 package mekhq.campaign;
 
 import megamek.client.Client;
+import megamek.client.IClient;
 import megamek.common.*;
 import megamek.common.annotations.Nullable;
-import megamek.common.event.GameVictoryEvent;
+import megamek.common.event.PostGameResolution;
 import megamek.common.loaders.EntityLoadingException;
 import megamek.common.options.OptionsConstants;
 import megamek.logging.MMLogger;
@@ -89,9 +90,9 @@ public class ResolveScenarioTracker {
     Campaign campaign;
     Scenario scenario;
     Optional<File> unitList = Optional.empty();
-    Client client;
+    IClient client;
     Boolean control;
-    private GameVictoryEvent victoryEvent;
+    private PostGameResolution victoryEvent;
 
     private static final MMLogger logger = MMLogger.create(ResolveScenarioTracker.class);
 
@@ -145,7 +146,7 @@ public class ResolveScenarioTracker {
         return unitList.map(File::getAbsolutePath).orElse("No file selected");
     }
 
-    public void setClient(Client c) {
+    public void setClient(IClient c) {
         client = c;
     }
 
@@ -183,7 +184,6 @@ public class ResolveScenarioTracker {
     public void processGame() {
         int playerId = client.getLocalPlayer().getId();
         int team = client.getLocalPlayer().getTeam();
-
         for (Enumeration<Entity> entityIterator = victoryEvent.getEntities(); entityIterator.hasMoreElements();) {
             Entity entity = entityIterator.nextElement();
             if (!entity.getSubEntities().isEmpty()) {
@@ -2142,7 +2142,7 @@ public class ResolveScenarioTracker {
         }
     }
 
-    public void setEvent(GameVictoryEvent gve) {
+    public void setEvent(PostGameResolution gve) {
         victoryEvent = gve;
     }
 
