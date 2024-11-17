@@ -7935,7 +7935,6 @@ public class Campaign implements ITechManager {
             addReport(techNameLinked + " performs maintenance on " + u.getHyperlinkedName() + ". " + paidString
                     + qualityString + ". " + damageString + " [<a href='MAINTENANCE|" + u.getId()
                     + "'>Get details</a>]");
-
             u.resetDaysSinceMaintenance();
         }
     }
