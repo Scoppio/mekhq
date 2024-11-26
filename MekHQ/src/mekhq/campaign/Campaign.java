@@ -2459,7 +2459,7 @@ public class Campaign implements ITechManager {
      */
     public List<Person> getTechs(final boolean noZeroMinute, final boolean eliteFirst) {
         final List<Person> techs = getActivePersonnel().stream()
-                .filter(person -> person.isTech() && (!noZeroMinute || (person.getMinutesLeft() > 0)))
+                .filter(person -> person.isTechExpanded() && (!noZeroMinute || (person.getMinutesLeft() > 0)))
                 .collect(Collectors.toList());
 
         // also need to loop through and collect engineers on self-crewed vessels
