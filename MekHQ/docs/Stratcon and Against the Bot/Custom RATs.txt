@@ -19,7 +19,7 @@ The overall structure of the file is as follows, with values enclosed in bracket
 Explanation of fields:
 [source name]: How this collection will appear in the list of available RATs in Campaign Options. Must be unique; if more than one file in data/universe/ratdata has the same value, only the last one loaded will be used.
 
-[earliest year for RAT]: The game year that the RAT should be considered available. The RATs contained a section dated after the game year will be passed over. Those dated within the game year or earlier will be checked earliest first, and moving back to the oldest until a matching RAT is found or all are checked.
+[earliest year for RAT]: The TWGame year that the RAT should be considered available. The RATs contained a section dated after the TWGame year will be passed over. Those dated within the TWGame year or earlier will be checked earliest first, and moving back to the oldest until a matching RAT is found or all are checked.
 
 [RAT name]: This is the internal name of the RAT file (the first non-comment line). There must be one entry for each file in the RAT collection that is to be used. Including the same file multiple times will not break anything, but should be avoided because it is unnecessary and is more likely to create confusion.
 

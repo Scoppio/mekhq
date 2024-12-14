@@ -11,7 +11,7 @@
 ## 1. About
 
 MekHQ is a Java helper program for the [MegaMek](http://megamek.org)
-game that allows users to load a list of entities from an XML file, perform repairs
+TWGame that allows users to load a list of entities from an XML file, perform repairs
 and customizations, and then save the new entities to another XML file that
 can be loaded into MegaMek. For more details, see
 our [website](http://megamek.org/) and join our [Discord](https://discord.gg/XM54YH9396).

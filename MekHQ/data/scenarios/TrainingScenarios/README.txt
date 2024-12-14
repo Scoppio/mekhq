@@ -1,6 +1,6 @@
-FUTURE AMENDMENTS (for game developers)
+FUTURE AMENDMENTS (for TWGame developers)
 This training scenario series is intended to introduce small chunks of the rules with each scenario.
-Provide game options to disable the following Advance rules: Torso Twisting, Heat, MekWarriors, Piloting Skill Rolls, Critical Hits, Physical Attacks.
+Provide TWGame options to disable the following Advance rules: Torso Twisting, Heat, MekWarriors, Piloting Skill Rolls, Critical Hits, Physical Attacks.
 Provide a way to set Game Options within the .mms file.
 
 **********Battletech 3rd Edition Training Scenario #1 - First Run, pg. 36**********

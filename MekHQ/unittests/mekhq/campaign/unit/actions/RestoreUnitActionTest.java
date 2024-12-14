@@ -30,10 +30,11 @@ import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 
+import megamek.common.IGame;
+import megamek.common.TWGame;
 import org.junit.jupiter.api.Test;
 
 import megamek.common.Entity;
-import megamek.common.Game;
 import megamek.common.Player;
 import mekhq.campaign.Campaign;
 import mekhq.campaign.Quartermaster;
@@ -48,7 +49,7 @@ public class RestoreUnitActionTest {
     @Test
     public void restoreUnitSwitchesOutEntityAndParts() {
         Campaign mockCampaign = mock(Campaign.class);
-        Game mockGame = mock(Game.class);
+        IGame mockGame = mock(twGame.class);
         when(mockCampaign.getGame()).thenReturn(mockGame);
         Player mockPlayer = new Player(1, "Player");
         when(mockCampaign.getPlayer()).thenReturn(mockPlayer);

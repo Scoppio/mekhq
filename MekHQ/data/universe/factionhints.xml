@@ -229,8 +229,8 @@ they shouldn't be fighting DC and Stone's Coalition, so I make them neutral for 
   <war name="Marik Civil War" start="3014-05-22" end="3015-05-31">
     <parties>FWL,FWLR</parties>
   </war>
-  <!-- Aurigan Civil War: setting for HBS' BattleTech game. The dates are very roughly estimated
-  based on descriptions in game and in the sourcebook. That means they are semi-canon, and should be
+  <!-- Aurigan Civil War: setting for HBS' BattleTech twGame. The dates are very roughly estimated
+  based on descriptions in TWGame and in the sourcebook. That means they are semi-canon, and should be
   updated if possible. Ulysses Update: Changed these to match the planetary control dates better in
   MHQ to help contract generation. -->
   <war name="Aurigan Civil War" start="3025-01-25" end="3025-12-30">

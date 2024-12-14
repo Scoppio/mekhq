@@ -1411,11 +1411,11 @@ public class CampaignGUI extends JPanel {
         } catch (Exception ex) {
             logger.error("", ex);
             JOptionPane.showMessageDialog(frame, """
-                    Oh no! The program was unable to correctly save your game. We know this
+                    Oh no! The program was unable to correctly save your twGame. We know this
                     is annoying and apologize. Please help us out and submit a bug with the
-                    mekhq.log file from this game so we can prevent this from happening in
+                    mekhq.log file from this TWGame so we can prevent this from happening in
                     the future.""",
-                    "Could not save game",
+                    "Could not save TWGame",
                     JOptionPane.ERROR_MESSAGE);
 
             // restore the backup file
@@ -2125,7 +2125,7 @@ public class CampaignGUI extends JPanel {
             JOptionPane.showMessageDialog(getFrame(), """
                     Oh no! The program was unable to correctly export your personnel. We know this
                     is annoying and apologize. Please help us out and submit a bug with the
-                    mekhq.log file from this game so we can prevent this from happening in
+                    mekhq.log file from this TWGame so we can prevent this from happening in
                     the future.""",
                     "Could not export personnel", JOptionPane.ERROR_MESSAGE);
             // restore the backup file
@@ -2271,7 +2271,7 @@ public class CampaignGUI extends JPanel {
             JOptionPane.showMessageDialog(getFrame(), """
                     Oh no! The program was unable to correctly export your parts. We know this
                     is annoying and apologize. Please help us out and submit a bug with the
-                    mekhq.log file from this game so we can prevent this from happening in
+                    mekhq.log file from this TWGame so we can prevent this from happening in
                     the future.""",
                     "Could not export parts", JOptionPane.ERROR_MESSAGE);
             // restore the backup file

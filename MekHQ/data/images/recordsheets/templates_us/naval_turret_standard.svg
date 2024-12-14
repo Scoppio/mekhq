@@ -1685,7 +1685,7 @@
                                                                                                         ><tspan x="40.122" y="70.000"
                                                                                                         >Major damage; no movement for</tspan
                                                                                                         ><tspan x="40.122" y="77.000"
-                                                                                                        >the rest of the game Vehicle is</tspan
+                                                                                                        >the rest of the TWGame Vehicle is</tspan
                                                                                                         ><tspan x="40.122" y="84.000"
                                                                                                         >immobile.</tspan
                                                                                                       ></text
@@ -1737,7 +1737,7 @@
                                                                                                     ><text x="6.000" y="186.000" fill="#231f20" text-anchor="start" style="font-family:Eurostile;font-size:3.800px;font-weight:normal;font-style:normal" textLength="139.600" lengthAdjust="spacingAndGlyphs"
                                                                                                     >+6. If a unit’s Cruising MP is reduced to 0, it cannot move for the rest</text
                                                                                                     ><text x="6.000" y="190.000" fill="#231f20" text-anchor="start" style="font-family:Eurostile;font-size:3.800px;font-weight:normal;font-style:normal" textLength="139.600" lengthAdjust="spacingAndGlyphs"
-                                                                                                    >of the game, but is not considered an immobile target. In addition, all</text
+                                                                                                    >of the TWGame, but is not considered an immobile target. In addition, all</text
                                                                                                     ><text x="6.000" y="194.000" fill="#231f20" text-anchor="start" style="font-family:Eurostile;font-size:3.800px;font-weight:normal;font-style:normal" textLength="139.600" lengthAdjust="spacingAndGlyphs"
                                                                                                     >motive system damage takes effect at the end of the phase in which</text
                                                                                                     ><text fill="#231f20" x="6.000" y="198.000" style="font-family:Eurostile;font-size:3.800px;font-weight:normal;font-style:normal;mml-field-width:3732.704" text-anchor="start"

@@ -10,7 +10,7 @@ for techs, failed healing checks for doctors, and failed acquisition rolls for a
 role acquires parts in the campaign).
 
 There is also a means for players to add their own custom SPAs, edge triggers, and implants. At the time
-of writing there are no actual in-game effects of custom SPAs, and they are provided for book-keeping
+of writing there are no actual in-TWGame effects of custom SPAs, and they are provided for book-keeping
 purposes. MekHQ can manage the bookkeeping of spending XP and tracking which personnel have acquired
 the special ability, but it is up the player to manage the effects. There are plans to add plugin module
 support to MekHQ at some point in the future, and plugins can be designed to apply the effects of the SPA.

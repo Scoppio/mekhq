@@ -181,7 +181,7 @@ The contract and unit markets refresh on every first of the month, the personnel
 The next four options deal with restriction the rules dictate for your company size, each individual lance and the spare parts you are able to buy during contracts. All of them are explained in the AtB rules and you should try to work within them because they transmit part of the feeling of AtB and BattleTech lore in general. However if anything prevents you from enjoying yourself turn it off it is only a framework after all.
 "Intensity" is an important option because it can drastically change the feeling of your campaign. The standard setting of "1" produces a lot of battles in most cases and can be overwhelming. If you want to focus more on swift progress instead of fighting reduce it by 0.1 steps until you find your sweet spot.
 
-"Double enemy vehicles" and "OpFor lance type ratios" adjust the composition of your enemy. At the beginning a large number of vehicles can be a challenge or you might look for a cleaner mek versus mek game style both can be achieved here.
+"Double enemy vehicles" and "OpFor lance type ratios" adjust the composition of your enemy. At the beginning a large number of vehicles can be a challenge or you might look for a cleaner mek versus mek TWGame style both can be achieved here.
 VTOLs are an important part of BattleTech but the bot does not yet fully support them and it might be better to not use them. Unlike with ASFs the bot can already do some things with VTOLs which makes them an option.
 "Use DropShips" can generate a few battle with DropShips but should be used with care. Loosing a DropShip has severe consequences for your contract and your financial situation. As stated above the bot does not support aero thus you will still face only ground opposition.
 Weather, light and planetary conditions are purely optional and personal preference. They can alter scenarios drastically and present new tactical questions but it is also possible to make a battle very annoying to play. The best way to find out which setting works for you is trial and error.
@@ -193,7 +193,7 @@ The "Delay Timer" is useful if you have problems with the transfer from MekHQ to
 While playing AtB it is always important to remember that the rules are only a framework for you to enjoy yourself and that they can always be adapted as you like best.
 Broadly speaking there are two levels of play in AtB, strategic and tactical. The strategic level is about what forces you have, in what condition at which location at any given time. The tactical side is the actual combat played out in MegaMek. Both levels feed each other, weak forces will have a harder time in combat, poor performance in combat makes it harder to built a strong force.
 
-There are several options which make to strategic game a bit easier.
+There are several options which make to strategic TWGame a bit easier.
 "Against the Bot" Tab:
 enabling "Use share system" will make retirement rolls slightly easier, should be done at the start of a campaign
 enabling "Customize retirement rolls" will allow you to set modifiers on retirement rolls and keep your forces together
@@ -214,7 +214,7 @@ deploy reinforcement beyond the provisions in the rules
 As written above AtB is played on two levels.
 To increase the strategic difficulty maintenance and a reduction in payment are good options.
 
-Tactical difficulty can be increased by adjusting the skill level in the AtB options and turning double enemy vehicles on. Light, weather and planetary conditions can make the game harder for players as long as they do not optimise their forces to take advantage.
+Tactical difficulty can be increased by adjusting the skill level in the AtB options and turning double enemy vehicles on. Light, weather and planetary conditions can make the TWGame harder for players as long as they do not optimise their forces to take advantage.
 
 
 6. FAQ

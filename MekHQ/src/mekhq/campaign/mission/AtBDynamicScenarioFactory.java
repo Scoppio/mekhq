@@ -728,13 +728,13 @@ public class AtBDynamicScenarioFactory {
 
                 if (campaign.getCampaignOptions().isAutoConfigMunitions()) {
                     // Configure *all* generated units with appropriate munitions (for BV calcs)
-                    Game cGame = campaign.getGame();
-                    TeamLoadOutGenerator tlg = new TeamLoadOutGenerator(cGame);
+                    TWGame cTWGame = campaign.getGame();
+                    TeamLoadOutGenerator tlg = new TeamLoadOutGenerator(cTWGame);
                     ArrayList<Entity> arrayGeneratedLance = new ArrayList<>(generatedLance);
                     // bin fill ratio will be adjusted by the load out generator based on piracy and
                     // quality
-                    ReconfigurationParameters rp = TeamLoadOutGenerator.generateParameters(cGame,
-                        cGame.getOptions(), arrayGeneratedLance, factionCode, new ArrayList<>(),
+                    ReconfigurationParameters rp = TeamLoadOutGenerator.generateParameters(cTWGame,
+                        ctwGame.getOptions(), arrayGeneratedLance, factionCode, new ArrayList<>(),
                         new ArrayList<>(), ownerBaseQuality, ((isPirate) ? TeamLoadOutGenerator.UNSET_FILL_RATIO : 1.0f));
                     rp.isPirate = isPirate;
                     rp.groundMap = onGround;

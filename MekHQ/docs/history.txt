@@ -26,7 +26,7 @@ MEKHQ VERSION HISTORY:
 + Fix #5239: Simulated Relationship Behavior Fixes
 + Fix #5235: Fixed Typo and Added null check in RetirementDefectionTracker
 + PR #5243: Updated MekHQ Morale & StratCon Scenario Spawn Methods
-+ PR #5155: CombatMath: Make princess take the reins so you can play a game of spreadsheets!
++ PR #5155: CombatMath: Make princess take the reins so you can play a TWGame of spreadsheets!
 + Fix #5238: Added Better Handling for Negative Skill Levels
 + PR #5247: [FG3] Updated Aircraft Force Generation, Unit Culling, and Added ProtoMeks
 + Fix #5236: Stop My Mechwarrior Won't Stop Having Babies
@@ -264,7 +264,7 @@ MEKHQ VERSION HISTORY:
 + PR #4355: Spelling, typos, grammar, etc
 + PR #4356: Move munition config out of MHQ, use MM autoconfig code
 + FIX #4326, #4325: Corrected Admin Negotiation Experience Level Campaign Setting & Experience Level Calculations
-+ PR #4378: Update autoconfig calls to explicitly set ground/space state from scenario data, not game or map info
++ PR #4378: Update autoconfig calls to explicitly set ground/space state from scenario data, not TWGame or map info
 + RFE #4316: Updated Scenario Modifier Tooltips in CampaignOptionsDialog Properties
 + RFE #4317: Added Education Level to Biographical Filter of Personnel Table
 + RFE #4319: Added Education Level to Company Generator
@@ -455,7 +455,7 @@ MEKHQ VERSION HISTORY:
 0.49.20 (2024-06-28 2100 UTC) (THIS IS THE LAST VERSION TO SUPPORT JAVA 11)
 + PR #4005: Code internals: DialogOptionsListener update
 + PR #2997: Story Arcs Basic Architecture
-+ FIX #4017: Space and Low Atmosphere not saved to xml, when started game after load the correct board type was to megamek
++ FIX #4017: Space and Low Atmosphere not saved to xml, when started TWGame after load the correct board type was to megamek
 + PR #3928: add glare and solar flare odds to TerrainConditionsOddsManifest.xml file
 + PR #4033: Introduced a New Morale Level to Curb Invincible Morale Spikes in AtB & StratCon
 + Fix #3359: Added Ability to Order Impossible TN Parts from Acquisitions Dialog.
@@ -664,7 +664,7 @@ MEKHQ VERSION HISTORY:
 + PR #3991: Add all deployment variables to BotForce
 + Fix #3767: NPE while scouting Stratcon map due to non-applicable SPAs for enemy force
 + PR #3997: Set default MHQ theme to match MM GUIPreferences default (Flat Darcula currently)
-+ Fix #4002: Infinite loop when assigning SPAs to enemies from generated Scenario locked game UI
++ Fix #4002: Infinite loop when assigning SPAs to enemies from generated Scenario locked TWGame UI
 + PR #4003: Fixed Untreated Personnel Nag Triggering for Prisoners.
 
 0.49.18 (2024-02-17 1800 UTC)
@@ -1709,7 +1709,7 @@ v0.47.0 (2019-08-21 0300 UTC)
     - Allied DropShips may now be non-Leopards
     - VTOLs are always on as the bot can handle them fairly well
 + PR #1210: Adds all remaining unimplemented Large Craft parts - CIC, Grav Decks, K-F Drive, K-F Boom and the like
-+ PR #1227: DropShips can now load alternate munitions into artillery base if the game is configured for it
++ PR #1227: DropShips can now load alternate munitions into artillery base if the TWGame is configured for it
 + PR #1226: [Feature] Campaign Subset Export: export a subset of your current campaign into another, either new or existing, campaign file. Overwrites units and personnel with the same guid. Option to remove exported personnel from source campaign. Obviously make backups before using on an existing campaign.
 
 0.46.0 (Stable) (2019-08-12 1900 UTC)
@@ -1857,7 +1857,7 @@ v0.45.0 (2018-08-02 0200 UTC)
 + PR #741: Updated configuration presets for new campaigns to include new special pilot abilities.
 + Issue #445: Lengthy repairs now show the unit's name if the repair runs over more than one day.
 + PR #742: Errata - Range Master SPA no longer applicable to LOS range
-+ Issue #384: Cannot negotiate contract terms because the game selects the highest skilled admin
++ Issue #384: Cannot negotiate contract terms because the TWGame selects the highest skilled admin
         and not the one with the negotiating skill
 + PR #766: [Feature] Added balance-over-time and revenue/expenditure charts to finances tab
 + PR #769: [Feature] Added tooltips to tonnage labels on force view when AtB is enabled.
@@ -1881,7 +1881,7 @@ v0.45.0 (2018-08-02 0200 UTC)
 + Issue #796: LAM Pilot shows as Support in Personnel Breakdown
 + PR #821: Fix occasional issue where mechwarrior names with apostrophes and other "funny" characters would show up weird for completed scenarios.
 + PR #823: Fix for adding phantom heat sinks when restoring aerospace unit
-+ Issue #824: Post game salvage/prisoners didn't show up.
++ Issue #824: Post TWGame salvage/prisoners didn't show up.
 + Issue #729: Fix for 'adjust contract pay' calculating number of required lances at the wrong time.
 + PR #831: Fix two bugs in Edit Injuries dialog
         Advanced medical: remove injury and change injury types choices when location changes.
@@ -1951,7 +1951,7 @@ v0.43.10-RC4 (2018-04-18 18:00 UTC)
 + PR #673: Implement ability to acquire ammo in parts acquisition dialog via GM Mode
     Fixes issue #698: Unable to GM Acquire clan ammo
 + PR #701: Update Mission.planetName to Mission.planetId for consistency
-    Fixes issue #328: If you accept a contract on Taussen, the game teleports you back to Terra once you arrive
+    Fixes issue #328: If you accept a contract on Taussen, the TWGame teleports you back to Terra once you arrive
 + PR #802: Fix the campaign level planet pt. 2
     The rest of the fix for issue #328
 + PR #703: Make payroll monthly again, whups
@@ -1978,7 +1978,7 @@ v0.43.8-RC2 (2018-02-11 22:40 UTC)
 + Bug: large craft refits calculating ammo loading times incorrectly.
 + Issue #617: Extinct units available for purchase when they shouldn't be.
 + Issue #625: Repair Bay status window not cleared after last unit is repaired.
-+ Honor user's press of the cancel button in the briefing screen "load saved game" dialog
++ Honor user's press of the cancel button in the briefing screen "load saved TWGame" dialog
 + Dropships and other units with transport bays that have internal components (cubicles, doors) should no longer incorrectly show some of those components as damaged.
 + Improved faction-change info for pre-CC factions and CC formation using Handbook Liao
 + Updated faction-change info for FS using Handbook Davion
@@ -2298,7 +2298,7 @@ v0.3.28 (2016-04-16 19:30 UTC)
 + Syntax errors in planetary data fixed
 + Bug [#925]: Issues with reload of MHQ and Settings
 + [AtB] When failure to deploy results in defeat, replace generated entities with stubs.
-+ Issue #40: [ATB] 3.25 : Enemy reinforcements incorrectly set to deploy at the start of the game
++ Issue #40: [ATB] 3.25 : Enemy reinforcements incorrectly set to deploy at the start of the TWGame
 + Issue #68: IndexOutOfBoundsException when advancing day
 + Updated MegaMek.jar to 0.41.18
 + Updated MegaMekLab.jar to 0.1.54
@@ -2356,13 +2356,13 @@ v0.3.23 (2016-01-01 03:35 UTC)
 
 v0.3.22 (2015-12-24 23:15 UTC)
 + Bug [#980]: AtB UnitMarket weight class ArrayOutOfBounds exception
-+ Updates to use game year based Tech Levels for Engine/Gyro/Cockpit parts
++ Updates to use TWGame year based Tech Levels for Engine/Gyro/Cockpit parts
 + Updated MegaMek.jar to 0.41.12
 + Updated MegaMekLab.jar to 0.1.48
 
 v0.3.21 (2015-11-15 16:50 UTC)
 + Bug [#963]: CampaignOptionDialog crashes with NPE when "Confirm" button is pressed
-+ Bug: [AtB] MM game launched from MHQ using AtB does not enter deployment phase.
++ Bug: [AtB] MM TWGame launched from MHQ using AtB does not enter deployment phase.
 + Bug [#968]: GameOptionsDialog throws IllegalArgumentException
 + Updated MegaMek.jar to 0.41.11
 + Updated MegaMekLab.jar to 0.1.47
@@ -2370,7 +2370,7 @@ v0.3.21 (2015-11-15 16:50 UTC)
 v0.3.20 (2015-10-12 00:11 UTC)
 + Bug: NPE on warehouse tech filter
 + Bug: check for missing external id on ejected enemy pilots
-+ Bug [#888]: Briefing Room: Cancel load saved game causes NPE
++ Bug [#888]: Briefing Room: Cancel load saved TWGame causes NPE
 + Bug [#951]: Auto-resolve fails even with new mul method
 + Bug [#950]: Autofailing battle by advancing day does not undeploy lance
 + Bug [#891]: [ATB] Contracts Change Value On Reload
@@ -2555,7 +2555,7 @@ v0.3.15 (2015-08-04 10:50 UTC)
 + Updated MegaMek.jar to 0.41.5 and MegaMekLab.jar to 0.1.41
 
 v0.3.14 (2015-05-31 18:15 UTC)
-+ Entity last target and sensors now reset at end of game
++ Entity last target and sensors now reset at end of TWGame
 + Bug: AtB contract generator does not generate additional contract at faction capital
 + Patch [patches:#50]: Log Saver - Use Reassign instead of Remove/Assign
 + Patch [patches:#49]: Refit: Tech Time Management
@@ -2607,7 +2607,7 @@ v0.3.12 (2015-02-12 15:45 UTC)
 + Bug [#786]: AtB: Rank sort and prisoner rolls broken after battle
 + Bug: Edit Unit buttons doing nothing for salvaged units
 + Bug: Entities were not being correctly set on UnitStatuses
-+ Bug [#792]: Battle resolution does not start in MHQ after MM game
++ Bug [#792]: Battle resolution does not start in MHQ after MM TWGame
     I've fixed the NPE, but this still leaves the root cause of the issue unknown
     until questions in the ticket are answered. It would be best to fix that extraneous
     issue as well.
@@ -2732,7 +2732,7 @@ v0.3.7 (2014-12-14 19:25 UTC)
 + Bug [#694]: DropShip suddenly becomes 0/0 and may no longer be deployed but no damage is visible
 + Bug [#592]: "Ghost" Heat
 + Bug [#668]: NPE when clicking "finish" at end of battle salvage screen
-+ Bug [#700]: Entity.swarmTargetId should be cleared by MHQ at the end of a game
++ Bug [#700]: Entity.swarmTargetId should be cleared by MHQ at the end of a TWGame
 + Bug [#687]: C3I lance being incorrectly passed to MegaMek
 + Bug [#713]: Warship price column sorting appears to be broken
 + Bug [#717]: Buy in Bulk Buys 1 if you enter over 100
@@ -3050,9 +3050,9 @@ v0.3.4 (2014-04-26)
 + Bug [#444]: Selling of parts bug
 + Bug: Selling N Parts doesn't refresh anything
 + RFE [#154]: Add better multiple player support for resolving scenarios with saved games
-+ RFE: Join Game button in Briefing Room lets you join a game.
-    If the game is in the lounge, it adds you with your 'Meks.
-    If the game is in a different phase, it just connects you.
++ RFE: Join Game button in Briefing Room lets you join a twGame.
+    If the TWGame is in the lounge, it adds you with your 'Meks.
+    If the TWGame is in a different phase, it just connects you.
     If you wish to join as reinforcements you will just export
     a mul file, join using the join button, and then load your
     mul as reinforcements.
@@ -3142,7 +3142,7 @@ v0.3.4 (2014-04-26)
 + Replaced all calls to XMLStreamParser with calls to the new MULParser
 + RFE: Planet Editor & Randomizer (pt. 1: start of basic framework)
     This will eventually allow passing of an option to the MekHQ.jar file in order to edit the official
-    planets.xml file, and also an in game editor from the maps tab to allow for campaign level editing
+    planets.xml file, and also an in TWGame editor from the maps tab to allow for campaign level editing
     of the controlling factions and such as well.
 + RFE [#118]: Sub Rank Fields & Ranks by Profession - pt2
     Completed the rank system overhaul. The rank levels (For ComStar/WoB to get Precentor IV and such)
@@ -3493,7 +3493,7 @@ v0.3.0 (2013-04-25)
 + couple of proto fixes
 + New MegaMek.jar (9246)
 + PayCollateralDialog (WIP)
-+ collect parts that should be the same when loading game for backwards compatability
++ collect parts that should be the same when loading TWGame for backwards compatability
 + Bug: warehouse parts go missing on save and re-load
 + Bug: no cap on clan price modifier max
 
@@ -3533,7 +3533,7 @@ v0.1.23 Release Candidate 2 (2013-03-03)
     and DefaultComboBoxModel that I don't know how to handle.
 
 v0.1.22 Release Candidate 1 (2013-02-17)
-+ Bug: not able to save game when a refit with c3i is in progress
++ Bug: not able to save TWGame when a refit with c3i is in progress
 + Bug 298: Missions disappear after edit, not able to save
 + Bug 303: Bulldog and Goblin Tanks prevent reload
 + Bug 154: Refit Kits - not clearing out
@@ -3816,14 +3816,14 @@ v0.1.14 (2012-02-08)
 
 + random portrait selection
 + NewRecruitDialog and HireBulkPersonnelDialog
-+ warning dialog when game is not saved correctly
++ warning dialog when TWGame is not saved correctly
 + campaign option to generate portrait only for certain personnel types
 + Bug: tasksXP not being saved correctly
 + repairable parts in a destroyed location should be listed as salvage only regardless of unit status
 + random skill options in CampaignOptionsDialog
 + finished random skill options in CampaignOptionsDialog
 + Bug: can do task that is already being worked on
-+ clear out game information from entity when resolving scenario (still needs work)
++ clear out TWGame information from entity when resolving scenario (still needs work)
 + idle XP accumulation option
 + Bug 3484446: Green Repairs Become Impossible
 + Bug 3473292: Toughness doesn't save
@@ -3895,7 +3895,7 @@ v0.1.12 (2011-12-22)
 + restrict parts store by tech limits
 + restrict acquisitions from repair bay by tech limits
 + fixed sorting issues on some tables (salary on personnel, cost and weight on parts store)
-+ type name not being changed on ammo change, leading to a reload item for unit when loading game
++ type name not being changed on ammo change, leading to a reload item for unit when loading TWGame
 + text filter in parts store
 + no infantry weapons in parts store
 + Bug 3456424: Prices in repair bay
@@ -3910,7 +3910,7 @@ v0.1.12 (2011-12-22)
 + get all personnel filtering correct
 + updated RATs
 + Bug: main gui refreshing before resolve wizard done
-+ better stopping of game thread (didn't fix memory problems)
++ better stopping of TWGame thread (didn't fix memory problems)
 + attempts to fix memory leak
 + new MM.jar (should deal with various LRM problems)
 + use a single dialog with CardLayout to resolve scenarios
@@ -3958,7 +3958,7 @@ v0.1.10 (2011-12-05)
 + RFE 3304267: EXIT
 + improvements to layout of top and bottom panels
 + added missing data from MM data folders
-+ beginning of MM game threading
++ beginning of MM TWGame threading
 + moved directory items and `Mek tileset from MekHQView to MekHQApp
 + print record sheets for scenario
 + resolution of MM games from within MHQ
@@ -3966,7 +3966,7 @@ v0.1.10 (2011-12-05)
 + added images for record sheet printing
 + gridlayout for scenario buttons
 + grey out scenario buttons when no scenario selected, selected scenario is completed, or scenario has no units assigned
-+ load/save MM game options in xml serialization
++ load/save MM TWGame options in xml serialization
 + Kill object and kills record for personnel
 + beginning of kill assignment from scenario resolution
 + ResolveWizard for kill assignment
@@ -4082,7 +4082,7 @@ v0.1.10 (2011-12-05)
 + aero and vehicle parts for parts store
 + new MM.jar
 + check for internal name and munition type when restoring type in AmmoBin (MML problem)
-+ Bug: NPE on game resolution when no killer
++ Bug: NPE on TWGame resolution when no killer
 + Bug: slots in destroyed locations are set as repairable when loading even if they have been scrapped
 
 v0.1.9 (2011-07-17)
@@ -4103,7 +4103,7 @@ v0.1.9 (2011-07-17)
 + backwards compatibility for reading in techs and doctor personnel
 + resetPilotAndEntity on unit when loading in XML
 + update entity pilot when personnel characteristics are changed
-+ Bug 3313715 and 3316912: Reloading game problem/destroyed parts in warehouse
++ Bug 3313715 and 3316912: Reloading TWGame problem/destroyed parts in warehouse
 + infantry personnel type
 + change Force to unit-specific rather than person-specific (to accommodate multi-person crews)
 + corrected scenario Ids
@@ -4129,7 +4129,7 @@ v0.1.9 (2011-07-17)
 + updated MM.jar
 + updated unit and image files to current MegaMek status
 + better checking in Person#isTech
-+ remove personnel from unit when removed from game
++ remove personnel from unit when removed from TWGame
 + removed repair system option from CampaignOptionDialog (outdated)
 + astech overtime
 + Bug: skill min not updating correctly when repairs fail
@@ -4432,7 +4432,7 @@ v0.1.6 (2011-05-17)
 + Bug: sometimes new ammo and armor spare part created when existing one should be increased
 + color-coding of availability in work descriptions
 + scrap and canScrap methods in Part.java
-+ Bug: completely salvaged `Mek showing up with new parts to be salvaged when game is reloaded
++ Bug: completely salvaged `Mek showing up with new parts to be salvaged when TWGame is reloaded
 + Bug: engine rating and type were reversed in constructor
 + Bug: XML not being saved as UTF-8
 + team name not reported correctly in Campaign#acquirePart
@@ -4595,7 +4595,7 @@ v0.1.4 (2011-04-28)
 + consolidated CustomizeTechTeamDialog and CustomizeMedicalTeamDialog into CustomizeSupportTeamDialog
 + random name button in CustomizeSupportTeamDialog
 + added examples to packaging.xml build
-+ reset game for entity in Campaign#restore()
++ reset TWGame for entity in Campaign#restore()
 
 v0.1.3 (2011-04-22)
 + Bug 3288095: Tasks are not refreshing and dates do not advance
@@ -4701,7 +4701,7 @@ v0.1.1 (2009-09-29)
 + RFE 2843210: Save campaign with campaign name
 + canon only button in UnitSelectorDialog
 + added unit picture to UnitSelectorDialog
-+ Bug: entities not being restored on load game
++ Bug: entities not being restored on load TWGame
 + UnitSelectorDialog (for hiring new units)
 + tooltip text and button labels for Deploy Units and Retrieve Units updated
 + load forces from MUL menu item (for loading initial forces including pilots)

@@ -138,7 +138,7 @@ messages:
 
       Be careful! Some of your Meks have already sustained damage.
       
-      *This game uses basic game rules.*
+      *This TWGame uses basic TWGame rules.*
     image: loweringboom_map.png
     trigger:
       type: gamestart
@@ -152,7 +152,7 @@ messages:
       count: 1
 
   - header: Another Unit Safe
-    text: Three of your Meks have safely left the battlefield! This game is already considered a draw.
+    text: Three of your Meks have safely left the battlefield! This TWGame is already considered a draw.
     trigger:
       type: fledunits
       modify: once

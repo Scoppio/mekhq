@@ -53,7 +53,7 @@ As soon as one of these conditions is fulfilled, calculate each sides point tota
   +20 Points if Lt.-Gen. Giggins' 'Mek is destroyed
   -20 Points per each Lyran 'Mek destroyed
   -15 Points, each Lyran 'Mek forced to withdraw
-  -10 Points for each operational Davion or ComStar 'Mek on Monte Diablo at the end of the game.
+  -10 Points for each operational Davion or ComStar 'Mek on Monte Diablo at the end of the twGame.
 
 
 SPECIAL RULES

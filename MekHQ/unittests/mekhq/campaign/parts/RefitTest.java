@@ -64,7 +64,7 @@ public class RefitTest {
         private CampaignOptions mockCampaignOptions;
 
         @Mock
-        private Game mockGame;
+        private IGame mockGame;
 
         @Mock
         private GameOptions mockGameOptions;

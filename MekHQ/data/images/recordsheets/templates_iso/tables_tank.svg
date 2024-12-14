@@ -195,7 +195,7 @@
           ><tspan x="61.930" y="42.000"
           >+3 modifier to all Driving Skill Rolls</tspan
           ><tspan x="61.930" y="49.000"
-          >Major damage; no movement for the rest of the game</tspan
+          >Major damage; no movement for the rest of the TWGame</tspan
           ><tspan x="61.930" y="56.000"
           >Vehicle is immobile.</tspan
         ></text
@@ -251,7 +251,7 @@
       ><text x="6.000" y="151.500" fill="#231f20" text-anchor="start" style="font-family:Eurostile;font-size:4.800px;font-weight:normal;font-style:normal" textLength="220.370" lengthAdjust="spacingAndGlyphs"
       >inflicted from the Motive System Damage Table is +6. If a unit’s Cruising MP is reduced</text
       ><text x="6.000" y="156.500" fill="#231f20" text-anchor="start" style="font-family:Eurostile;font-size:4.800px;font-weight:normal;font-style:normal" textLength="220.370" lengthAdjust="spacingAndGlyphs"
-      >to 0, it cannot move for the rest of the game, but is not considered an immobile target. In</text
+      >to 0, it cannot move for the rest of the TWGame, but is not considered an immobile target. In</text
       ><text x="6.000" y="161.500" fill="#231f20" text-anchor="start" style="font-family:Eurostile;font-size:4.800px;font-weight:normal;font-style:normal" textLength="220.370" lengthAdjust="spacingAndGlyphs"
       >addition, all motive system damage takes effect at the end of the phase in which the damage</text
       ><text x="6.000" y="166.500" fill="#231f20" text-anchor="start" style="font-family:Eurostile;font-size:4.800px;font-weight:normal;font-style:normal" textLength="220.370" lengthAdjust="spacingAndGlyphs"

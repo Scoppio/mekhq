@@ -1,4 +1,4 @@
-FUTURE AMMENDMENTS (game developers)
+FUTURE AMMENDMENTS (TWGame developers)
 1) Incorporate Clan Enhanced Imaging neural implants into MegaMek.
 2) Allow other than standard-size maps in a scenario.
 3) Allow one side to use the Faction Location (with the ability to define how many hexes out from the side) while the other side uses Hex Placement.
@@ -66,7 +66,7 @@ The Banshee strafes the clan meks just before the beginning of Turn 1.  The Stri
 
 MEGAMEK ADJUSTMENTS
 The map setup called for in the scenario is currently impossible to setup in MegaMek.  This required a shift in all directions 90 degrees clockwise (West is now North, East is now South).
-While the information for the Strikers Air Support is provided in this scenario for (wishful thinking) future applications, the current version does not support this capability.  To compensate, I have assumed that half of the total shots (2 lasers x 4 strafes = 8 hits / 2 = 4 hits) from the Banshee made there marks, and divided the damage equally among the clan meks, using the Addition Damage option of the current scenario system.  Any effects these attacks have are legitimate, even if it kills both 'Meks before start of game (if that ever happens, let me know).
+While the information for the Strikers Air Support is provided in this scenario for (wishful thinking) future applications, the current version does not support this capability.  To compensate, I have assumed that half of the total shots (2 lasers x 4 strafes = 8 hits / 2 = 4 hits) from the Banshee made there marks, and divided the damage equally among the clan meks, using the Addition Damage option of the current scenario system.  Any effects these attacks have are legitimate, even if it kills both 'Meks before start of TWGame (if that ever happens, let me know).
 
 **********1st Somerset Strikers Scenario #2 - DUSTBALL SHOWDOWN (EPISODE 2), pg. 103**********
 
@@ -128,7 +128,7 @@ Because all 'Meks will be on the board from the beginning, this will effect the 
 If attacker wins the initiative; 1stSomersetStrikers(Centurion), BlackVision(Alpha Talon), BlackVision(Alpha Talon), 1stSomersetStrikers, BlackVision(Alpha Talon), BlackVision(Command Star), 1stSomersetStrikers, BlackVision(Alpha Talon), BlackVision(Command Star), BlackVision(Command Star), 1stSomersetStrikers, BlackVision(Alpha Talon), BlackVision(Command Star), BlackVision(Command Star)
 If defender wins the initiative; BlackVision(Alpha Talon), BlackVision(Alpha Talon), 1stSomersetStrikers(Centurion), BlackVision(Alpha Talon), BlackVision(Command Star), 1stSomersetStrikers, BlackVision(Alpha Talon), BlackVision(Command Star), BlackVision(Command Star), 1stSomersetStrikers, BlackVision(Alpha Talon), BlackVision(Command Star), BlackVision(Command Star), 1stSomersetStrikers
 To reflect the fact that all Clan 'Meks are supposed to start of with 13 heat points on their scale, the first star during the first round and the second star during the third round will not use 13 heat points worth of their heatsinks, regardless of the 'Meks capabilities to overheat without consequence.  If the 'Mek does not have 13 heatsinks available to start with (6.5 if Double Heatsinks), the mek may not move or fire.  After that round, nothing's stopping you from cooking your 'Mek as you see fit.
-While the information for the Strikers Air Support is provided in this scenario for (wishful thinking) future applications, the current version does not support this capability.  To compensate, I have assumed that half of the total shots (2 lasers x 4 strafes = 8 hits / 2 = 4 hits) from the Banshee made there marks, and divided the damage equally among the Clan 'Meks, using the Addition Damage option of the current scenario system.  Any effects these attacks have are legitimate, even if it kills the 'Meks before start of game (if that ever happens, let me know).
+While the information for the Strikers Air Support is provided in this scenario for (wishful thinking) future applications, the current version does not support this capability.  To compensate, I have assumed that half of the total shots (2 lasers x 4 strafes = 8 hits / 2 = 4 hits) from the Banshee made there marks, and divided the damage equally among the Clan 'Meks, using the Addition Damage option of the current scenario system.  Any effects these attacks have are legitimate, even if it kills the 'Meks before start of TWGame (if that ever happens, let me know).
 
 **********1st Somerset Strikers Scenario #3 - THE TAKING OF WOTAN (EPISODE 3), pg. 104**********
 
@@ -382,7 +382,7 @@ The Banshee Strafes the rebel meks just before the beginning of Turn 1.  The Str
 MEGAMEK ADJUSTMENTS
 Recommend playing this scenario with Double-Blind option set to true (unless using bot as a player).
 To reflect the initiative bonus of a Tactical Operation Center, The Awesome has a Tactical Genius pilot advantage (though whether or not it works is uncertain).
-While the information for the Strikers Air Support is provided in this scenario for (wishful thinking) future applications, the current version does not support this capability.  To compensate, I have assumed that 3 out of 8 medium lasers from the Banshee made there marks, one to an ISF 'Mek and two to the rebel 'Meks, using the Addition Damage option of the current scenario system.  Any effects these attacks have are legitimate, even if it kills the 'Meks before start of game (if that ever happens, let me know).
+While the information for the Strikers Air Support is provided in this scenario for (wishful thinking) future applications, the current version does not support this capability.  To compensate, I have assumed that 3 out of 8 medium lasers from the Banshee made there marks, one to an ISF 'Mek and two to the rebel 'Meks, using the Addition Damage option of the current scenario system.  Any effects these attacks have are legitimate, even if it kills the 'Meks before start of TWGame (if that ever happens, let me know).
 
 **********1st Somerset Strikers Scenario #8 - THE LIBERATION OF SOMERSET MILITARY ACADEMY (EPISODE 12), pg. 110**********
 
@@ -443,10 +443,10 @@ The Strikers benefit from an ecstatic level of morale during this scenario.  App
 
 MEGAMEK ADJUSTMENTS
 The map setup called for in the scenario is currently impossible to setup in MegaMek.  To compensate, all directions are shifted 90 degrees counter-clockwise (West is now South, East is now North).
-To reflect the morale bonus of the attackers, I have adjusted the attackers' Piloting & Gunnery Skills.  Though this bonus should be void at the loss of the Awesome, the Awesome will most likely make or break this scenario in order to proceed to the next scenario, thus it will most likely be in effect the entire game if the Strikers are to win. (A good clanner should like the challenge).
+To reflect the morale bonus of the attackers, I have adjusted the attackers' Piloting & Gunnery Skills.  Though this bonus should be void at the loss of the Awesome, the Awesome will most likely make or break this scenario in order to proceed to the next scenario, thus it will most likely be in effect the entire TWGame if the Strikers are to win. (A good clanner should like the challenge).
 Clan Enhanced Imaging neural implants are not incorporated into MegaMek.
 To reflect the initiative bonus of a Tactical Operation Center, The Awesome has a Tactical Genius pilot advantage (though whether or not it works is uncertain).
-While the information for the Strikers Air Support is provided in this scenario for (wishful thinking) future applications, the current version does not support this capability.  To compensate, I have assumed that 6 out of 8 medium lasers from the Banshee made there marks, one to each Clan 'Mek, using the Addition Damage option of the current scenario system.  Any effects these attacks have are legitimate, even if it kills the 'Meks before start of game (if that ever happens, let me know).
+While the information for the Strikers Air Support is provided in this scenario for (wishful thinking) future applications, the current version does not support this capability.  To compensate, I have assumed that 6 out of 8 medium lasers from the Banshee made there marks, one to each Clan 'Mek, using the Addition Damage option of the current scenario system.  Any effects these attacks have are legitimate, even if it kills the 'Meks before start of TWGame (if that ever happens, let me know).
 
 **********1st Somerset Strikers Scenario #9 - MALTHUS ATTACKS (EPISODE 13), pg. 111**********
 
@@ -502,4 +502,4 @@ The map setup called for in the scenario is currently impossible to setup in Meg
 Only the Awesome has the Piloting & Gunnery skills adjusted to reflect the morale bonus, because at this point the Awesome is either destroyed or go to declare a trail of position, which will not involve the other units.
 Clan Enhanced Imaging neural implants are not incorporated into MegaMek.
 The advantages of the TOC will not be used in a Trial of Possession, and cannot be used if the Awesome hasn't survived to this point, so nothing will be done to reflect the advantage of having it this round.
-While the information for the Strikers Air Support is provided in this scenario for (wishful thinking) future applications, the current version does not support this capability.  To compensate, I have assumed that 5 out of 8 medium lasers from the Banshee made there marks, one to each Clan mek, using the Addition Damage option of the current scenario system.  Any effects these attacks have are legitimate, even if it kills the meks before start of game (if that ever happens, let me know).
+While the information for the Strikers Air Support is provided in this scenario for (wishful thinking) future applications, the current version does not support this capability.  To compensate, I have assumed that 5 out of 8 medium lasers from the Banshee made there marks, one to each Clan mek, using the Addition Damage option of the current scenario system.  Any effects these attacks have are legitimate, even if it kills the meks before start of TWGame (if that ever happens, let me know).

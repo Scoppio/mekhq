@@ -72,7 +72,7 @@ PlanetaryConditionsAllowTerrainChanges=false
 # Faction (= Player) list ---------------------------------------
 # A scenario can be set to single player style. In this case the first player is
 # the human player and all other players are Princess bots. This will skip the
-# Player/Camo assignment dialog and the "Host game" dialog and directly connect
+# Player/Camo assignment dialog and the "Host TWGame" dialog and directly connect
 # to a localhost Server and use the correct player name.
 SinglePlayer=true
 # The player name used to log into the server MUST match this name to play as
@@ -124,7 +124,7 @@ Unit_PlayerB_1=Atlas AS7-D,PilotB1,3,3
 Unit_PlayerC_1=Locust LCT-1M,PilotB2,4,5
 
 # Additional advantages to add to pilots. Most of these require the 'MaxTech
-# Level3 Pilot Advantages' game option to be turned on. The possible values
+# Level3 Pilot Advantages' TWGame option to be turned on. The possible values
 # are:
 # dodge_maneuver, maneuvering_ace, melee_specialist, pain_resistance
 # Multiple advantages for one pilot are seperated by spaces
@@ -155,11 +155,11 @@ Unit_PlayerA_1_Camo=Clans/Wolf/,Alpha Galaxy.jpg
 # Unit_Kurita_1_Armor=0,30,19,24,20,24,10,24,24,33,33,1,25,17,17,13,13,17,17
 #
 # Alternately, if you want more random damage, and want to allow critical
-# damage before the game starts, you can use a unit damage property, which
+# damage before the TWGame starts, you can use a unit damage property, which
 # specifies a number of blocks of 5 damage that will be randomly applied to
 # the unit using the standard hit chart.  Any internal and critical hits will
 # be resolved normally.
-# Warning: this can result in the unit being destroyed before the game begins.
+# Warning: this can result in the unit being destroyed before the TWGame begins.
 # Unit_PlayerB_1_Damage=5
 
 # Advanced Dammage Modification
@@ -244,7 +244,7 @@ Unit_Kurita_6_SetAmmoTo=2:11-1
 # Ammo name is the unique string used in the 'Mek files themselves.
 # Errors will be logged to the normal log file and the ammo replaced
 # by the standard defined for the 'Mek. The same will happen for ammo
-# which is illegal according to the specified game rules.
+# which is illegal according to the specified TWGame rules.
 Unit_PlayerA_2_SetAmmoType=3:1-ISAC20 Flak Ammo
 
 # Set Altitude (works only for aerospace fighters, conventional fighters,

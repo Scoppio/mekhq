@@ -192,7 +192,7 @@ public class Campaign implements ITechManager {
     // I need to put a basic game object in campaign so that I can
     // assign it to the entities, otherwise some entity methods may get NPE
     // if they try to call up game options
-    private final Game game;
+    private final TWGame twGame;
     private final Player player;
 
     private GameOptions gameOptions;
@@ -291,9 +291,9 @@ public class Campaign implements ITechManager {
 
     public Campaign() {
         id = UUID.randomUUID();
-        game = new Game();
+        TWGame = new TWGame();
         player = new Player(0, "self");
-        game.addPlayer(0, player);
+        twGame.addPlayer(0, player);
         currentDay = LocalDate.ofYearDay(3067, 1);
         campaignStartDate = null;
         CurrencyManager.getInstance().setCampaign(this);
@@ -326,7 +326,7 @@ public class Campaign implements ITechManager {
         partsStore = new PartsStore(this);
         gameOptions = new GameOptions();
         gameOptions.getOption(OptionsConstants.ALLOWED_YEAR).setValue(getGameYear());
-        game.setOptions(gameOptions);
+        twGame.setOptions(gameOptions);
         customs = new ArrayList<>();
         shoppingList = new ShoppingList();
         news = new News(getGameYear(), id.getLeastSignificantBits());
@@ -378,8 +378,8 @@ public class Campaign implements ITechManager {
         this.overviewLoadingValue = overviewLoadingValue;
     }
 
-    public Game getGame() {
-        return game;
+    public TWGame getGame() {
+        return TWGame;
     }
 
     public Player getPlayer() {
@@ -1293,10 +1293,10 @@ public class Campaign implements ITechManager {
 
         // Assign an entity ID to our new unit
         if (Entity.NONE == u.getEntity().getId()) {
-            u.getEntity().setId(game.getNextEntityId());
+            u.getEntity().setId(twGame.getNextEntityId());
         }
 
-        game.addEntity(u.getEntity());
+        twGame.addEntity(u.getEntity());
     }
 
     /**
@@ -1345,7 +1345,7 @@ public class Campaign implements ITechManager {
 
         // we decided we like the test unit so much we are going to keep it
         unit.getEntity().setOwner(player);
-        unit.getEntity().setGame(game);
+        unit.getEntity().setGame(twGame);
         unit.getEntity().setExternalIdAsString(unit.getId().toString());
 
         // now lets grab the parts from the test unit and set them up with this unit
@@ -1362,9 +1362,9 @@ public class Campaign implements ITechManager {
 
         // Assign an entity ID to our new unit
         if (Entity.NONE == unit.getEntity().getId()) {
-            unit.getEntity().setId(game.getNextEntityId());
+            unit.getEntity().setId(twGame.getNextEntityId());
         }
-        game.addEntity(unit.getEntity());
+        twGame.addEntity(unit.getEntity());
 
         checkDuplicateNamesDuringAdd(unit.getEntity());
         addReport(unit.getHyperlinkedName() + " has been added to the unit roster.");
@@ -1404,7 +1404,7 @@ public class Campaign implements ITechManager {
 
         // reset the game object
         en.setOwner(player);
-        en.setGame(game);
+        en.setGame(twGame);
         en.setExternalIdAsString(unit.getId().toString());
 
         unit.initializeBaySpace();
@@ -1436,9 +1436,9 @@ public class Campaign implements ITechManager {
 
         // Assign an entity ID to our new unit
         if (Entity.NONE == en.getId()) {
-            en.setId(game.getNextEntityId());
+            en.setId(twGame.getNextEntityId());
         }
-        game.addEntity(en);
+        twGame.addEntity(en);
 
         checkDuplicateNamesDuringAdd(en);
         addReport(unit.getHyperlinkedName() + " has been added to the unit roster.");
@@ -5211,7 +5211,7 @@ public class Campaign implements ITechManager {
         for (Unit unit : getUnits()) {
             if (null != unit.getEntity()) {
                 unit.getEntity().setOwner(player);
-                unit.getEntity().setGame(game);
+                unit.getEntity().setGame(twGame);
                 unit.getEntity().restore();
 
                 // Aerospace parts have changed after 0.45.4. Reinitialize parts for Small Craft
@@ -7428,7 +7428,7 @@ public class Campaign implements ITechManager {
         entity.getSecondaryPositions().clear();
         // TODO: still a lot of stuff to do here, but oh well
         entity.setOwner(player);
-        entity.setGame(game);
+        entity.setGame(twGame);
     }
 
     public void refreshNetworks() {
@@ -7442,7 +7442,7 @@ public class Campaign implements ITechManager {
                 boolean C3iSet = false;
                 boolean NC3Set = false;
 
-                for (Entity e : game.getEntitiesVector()) {
+                for (Entity e : twGame.getEntitiesVector()) {
                     // C3 Checks
                     if (entity.hasC3()) {
                         if ((entity.getC3MasterIsUUIDAsString() != null)
@@ -7745,11 +7745,11 @@ public class Campaign implements ITechManager {
      * properly updated and destroyed ones removed
      */
     public void reloadGameEntities() {
-        game.reset();
+        twGame.reset();
         getHangar().forEachUnit(u -> {
             Entity en = u.getEntity();
             if (null != en) {
-                game.addEntity(en.getId(), en);
+                twGame.addEntity(en.getId(), en);
             }
         });
     }

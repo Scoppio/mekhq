@@ -24,7 +24,7 @@ import megamek.client.generator.TeamLoadOutGenerator;
 import megamek.client.ui.baseComponents.MMComboBox;
 import megamek.common.Entity;
 import megamek.common.EntityListFile;
-import megamek.common.Game;
+import megamek.common.TWGame;
 import megamek.common.annotations.Nullable;
 import megamek.common.containers.MunitionTree;
 import megamek.common.event.Subscribe;
@@ -957,7 +957,7 @@ public final class BriefingTab extends CampaignGuiTab {
      * @param chosen
      */
     private void autoconfigureBotMunitions(AtBScenario scenario, List<Unit> chosen) {
-        Game cGame = getCampaign().getGame();
+        TWGame cTWGame = getCampaign().getGame();
         boolean groundMap = scenario.getBoardType() == AtBScenario.T_GROUND;
         boolean spaceMap = scenario.getBoardType() == AtBScenario.T_SPACE;
         ArrayList<Entity> alliedEntities = new ArrayList<>();
@@ -968,7 +968,7 @@ public final class BriefingTab extends CampaignGuiTab {
         String allyFaction = "IS";
         int opforQuality = RATING_5;
         HashMap<Integer, ArrayList<Entity>> botTeamMappings = new HashMap<>();
-        int allowedYear = cGame.getOptions().intOption(OptionsConstants.ALLOWED_YEAR);
+        int allowedYear = ctwGame.getOptions().intOption(OptionsConstants.ALLOWED_YEAR);
 
         // This had better be an AtB contract...
         final Mission mission = comboMission.getSelectedItem();
@@ -1007,7 +1007,7 @@ public final class BriefingTab extends CampaignGuiTab {
         }
 
         // Configure generated units with appropriate munitions (for BV calcs)
-        TeamLoadOutGenerator tlg = new TeamLoadOutGenerator(cGame);
+        TeamLoadOutGenerator tlg = new TeamLoadOutGenerator(cTWGame);
 
         // Reconfigure each group separately so they only consider their own
         // capabilities
@@ -1015,8 +1015,8 @@ public final class BriefingTab extends CampaignGuiTab {
             // bin fill ratio will be adjusted by the loadout generator based on piracy and
             // quality
             ReconfigurationParameters rp = TeamLoadOutGenerator.generateParameters(
-                    cGame,
-                    cGame.getOptions(),
+                cTWGame,
+                    ctwGame.getOptions(),
                     entityList,
                     opforFactionCode,
                     playerEntities,
@@ -1034,8 +1034,8 @@ public final class BriefingTab extends CampaignGuiTab {
         ArrayList<Entity> allEnemyEntities = new ArrayList<>();
         botTeamMappings.values().stream().forEach(x -> allEnemyEntities.addAll(x));
         ReconfigurationParameters rp = TeamLoadOutGenerator.generateParameters(
-                cGame,
-                cGame.getOptions(),
+            cTWGame,
+                ctwGame.getOptions(),
                 alliedEntities,
                 allyFactionCodes.get(0),
                 allEnemyEntities,

@@ -27,7 +27,7 @@ Unit_Wolves_4=Puma (Adder) Prime,MekWarrior Tynan,3,4,S,08,03
 Unit_Wolves_5=Uller (Kit Fox) B, MekWarrior Quincy,3,4,S,08,09
 
 # Additional advantages to add to pilots. Most of these require the 'MaxTech
-# Level3 Pilot Advantages' game option to be turned on. The possible values
+# Level3 Pilot Advantages' TWGame option to be turned on. The possible values
 # are:
 # dodge_maneuver, maneuvering_ace, melee_specialist, pain_resistance
 # Multiple advantages for one pilot are seperated by spaces

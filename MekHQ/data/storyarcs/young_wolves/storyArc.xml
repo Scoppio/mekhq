@@ -129,7 +129,7 @@
                 default, the bot will
                 "cheat" and ignore double-blind. This prevents the bot from stalling out in the
                 deployment zone. You can turn this
-                "single-blind" feature off in the game options if you prefer.
+                "single-blind" feature off in the TWGame options if you prefer.
                 * Clan physical attacks are disabled for both you and your opponents. You can turn
                 them on if you
                 would prefer grittier and less honorable fights.
@@ -171,7 +171,7 @@
             <instructions>
                 Use this form to create a Clan Wolf MekWarrior, using an XP pool to buy skills and
                 special abilities. Leftover XP will be added to your character. Only
-                Gunnery, Piloting, and Tactics (initiative) will have in-game effects in the story
+                Gunnery, Piloting, and Tactics (initiative) will have in-TWGame effects in the story
                 arc.
             </instructions>
             <assignedUnitId>ec66a68a-2b74-4301-9e32-4c9e2e5fedb8</assignedUnitId>
@@ -11470,7 +11470,7 @@
                     <nextStoryPointId>1cb4ba0e-7579-4ce8-ab57-abb53b730ea4</nextStoryPointId>
                 </storyOutcome>
             </storyOutcomes>
-            <!-- Failing this mission should result in game over -->
+            <!-- Failing this mission should result in TWGame over -->
             <nextStoryPointId>d13f379e-3035-4637-a7e7-e6f9b205a8d6</nextStoryPointId>
         </storyPoint>
         <storyPoint name="scenario_morges_destroy_convoy"
